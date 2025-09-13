@@ -14,6 +14,7 @@ const roboto = Roboto({
 export default function Hero() {
   return (
     <div className="relative w-full h-[calc(100vh-4rem)] md:h-[calc(100vh-4.5rem)] pt-16 md:pt-18">
+      <h1>Vaddera Reservation Porata Samithi</h1>
       <Image
         src="/hero.png"
         alt="Hero-image"
