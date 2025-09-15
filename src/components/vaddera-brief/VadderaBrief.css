@@ -1,0 +1,13 @@
+.vaddera-brief-bg {
+  position: relative;
+  width: min(100rem, 100%);
+  min-height: 100vh;
+  margin: 0 auto;
+  /* padding: 50px 100px 0px 100px; */
+  color: #fff;
+
+  background: rgba(255, 255, 255, 0.686);
+    /* url("/odde-obanna-without-bg.png") center/contain no-repeat; */
+  background-blend-mode: overlay;
+  background-position: 300px;
+}
