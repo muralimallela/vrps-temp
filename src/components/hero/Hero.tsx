@@ -13,7 +13,7 @@ const roboto = Roboto({
 
 export default function Hero() {
   return (
-    <div className="relative w-full h-[calc(100vh-4rem)] md:h-[calc(100vh-4.5rem)] pt-12 sm:pt-14 md:pt-18">
+    <div className="relative w-full pb-10 lg:pb-0 md:h-[calc(100vh-4.5rem)] pt-12 sm:pt-14 md:pt-18">
       <Image
         src="/hero.png"
         alt="Hero-image"

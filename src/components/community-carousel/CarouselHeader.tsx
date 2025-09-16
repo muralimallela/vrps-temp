@@ -9,7 +9,7 @@ export default function CarouselHeader() {
   return (
     <div className="carousel-content">
       <div className="content-bg">
-        <h2 className={robotoBold.className}>COMMUNITY MEMBERS</h2>
+        <h2 className={`${robotoBold.className} text-sm`}>COMMUNITY MEMBERS</h2>
         <p className={roboto.className}>
           A community thrives when people unite with kindness, share knowledge,
           and support each other, creating a stronger, brighter future for

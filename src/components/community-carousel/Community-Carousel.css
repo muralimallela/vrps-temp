@@ -11,49 +11,6 @@
   background-blend-mode: overlay;
 }
 
-@media (max-width: 900px) {
-  .carousel {
-    padding: 50px 20px 0px 20px;
-    min-height: 70vh;
-  }
-  .carousel-content h2 {
-    font-size: 2rem;
-    padding: 20px 0px 0px 15px;
-  }
-  .carousel-content p {
-    font-size: 1rem;
-    padding: 10px 15px 20px 20px;
-  }
-  .my-swiper-slider {
-    width: 14rem;
-    height: 16rem;
-  }
-}
-
-@media (max-width: 600px) {
-  .carousel {
-    padding: 30px 5px 0px 5px;
-    min-height: 60vh;
-  }
-  .carousel-content h2 {
-    font-size: 1.2rem;
-    padding: 10px 0px 0px 5px;
-  }
-  .carousel-content p {
-    font-size: 0.95rem;
-    padding: 5px 5px 10px 10px;
-  }
-  .my-swiper-slider {
-    width: 10rem;
-    height: 12rem;
-    border-radius: 20px 20px 8px 8px;
-  }
-  .slider-btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
-}
-
 .carousel-content span {
   font-size: 1rem;
   letter-spacing: 1.5px;
@@ -226,3 +183,46 @@
   font-size: 18px;
   color: #000;
 } */
+
+@media (max-width: 900px) {
+  .carousel {
+    padding: 50px 20px 0px 20px;
+    min-height: 70vh;
+  }
+  .carousel-content h2 {
+    font-size: 2rem;
+    padding: 20px 0px 0px 15px;
+  }
+  .carousel-content p {
+    font-size: 1rem;
+    padding: 10px 15px 20px 20px;
+  }
+  .my-swiper-slider {
+    width: 14rem;
+    height: 16rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .carousel {
+    padding: 30px 10px 0px 10px;
+    min-height: 60vh;
+  }
+  .carousel-content h2 {
+    font-size: 1.5rem;
+    padding: 10px 0px 0px 5px;
+  }
+  .carousel-content p {
+    font-size: 0.95rem;
+    padding: 0px 5px 10px 10px;
+  }
+  .my-swiper-slider {
+    width: 10rem;
+    height: 24rem;
+    border-radius: 20px 20px 8px 8px;
+  }
+  .slider-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}

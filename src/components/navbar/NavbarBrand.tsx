@@ -6,6 +6,6 @@ export const NavbarBrand: React.FC = () => (
   <Link href="/" className="flex items-center gap-2">
     <Image src="/vrps-logo.png" width={40} height={40} alt="vrps logo"/>
 
-    <span className="font-medium">Vaddera Reservation Porata Samithi</span>
+    <span className="font-medium text-sm lg:text-lg">Vaddera Reservation Porata Samithi</span>
   </Link>
 );

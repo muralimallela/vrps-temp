@@ -35,15 +35,15 @@ export const VadderaBrief: React.FC = () => {
         </div>
 
         {/* Right: Text Content */}
-        <div className="max-w-xl text-center md:text-left ">
-          <p className="text-[#6A160A] mb-4 text-2xl text-justify">
+        <div className="max-w-xl  md:text-left ">
+          <p className="text-[#6A160A] mb-4 text-lg md:text-2xl  text-justify">
             The Vaddera Reservation Struggle Committee (VRPS) is not just an
             association — it is an organization dedicated to bringing to the
             government’s attention all matters related to the welfare,
             reservations, and development that should rightfully be provided to
             the Vaddera community across the country.
           </p>
-          <p className="text-[#6A160A] mb-6 text-2xl text-justify">
+          <p className="text-[#6A160A] mb-6 text-lg md:text-2xl text-justify">
             While many associations fight only to some extent for developmental
             activities, VRPS moves forward with unyielding determination to
             bring light into the lives of Vadderas throughout the nation.

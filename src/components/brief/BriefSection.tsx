@@ -36,7 +36,7 @@ export default function BriefSection({
         }`}
       >
         {/* Left Content */}
-        <div className="flex-1 text-center md:text-left">
+        <div className="flex-1 text-justify md:text-left">
           {subtitle && (
             <h3 className="mt-2 text-lg sm:text-xl font-semibold text-gray-800">
               {subtitle}

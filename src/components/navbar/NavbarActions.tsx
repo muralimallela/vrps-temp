@@ -22,7 +22,9 @@ export const NavbarActions: React.FC = () => (
       </span>
     </SignedOut>
     <SignedIn>
-      <UserButton />
+      <div className="border-3 border-white rounded-[100%] aspect-square p-0 flex content-center">
+        <UserButton />
+      </div>
     </SignedIn>
   </div>
 );
