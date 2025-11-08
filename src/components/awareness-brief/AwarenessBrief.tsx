@@ -1,18 +1,24 @@
+"use client";
+
 import Image from "next/image";
 import BriefSection from "../brief/BriefSection";
+import { useTranslations } from "next-intl";
 
 export default function AwarenessBrief() {
+  const t = useTranslations("AwarenessBrief");
+
   return (
     <BriefSection
-      title="From Awareness to Empowerment"
-      description="The early phase of VRPS focused on awareness building. Activists organized meetings in villages, towns, and urban colonies where Vaddera families lived. They explained:"
+      title={t("title")}
+      description={t("description")}
       points={[
-        "Why reservations were essential.",
-        "How other backward communities progressed with state support.",
-        "How the Vadderas could no longer remain silent.",
+        t("points.0"),
+        t("points.1"),
+        t("points.2"),
       ]}
+      buttonText = {t("buttonText")}
       imageSrc="/history.png"
-      imageAlt="Awareness efforts"
+      imageAlt={t("imageAlt")}
     />
   );
 }

@@ -1,25 +1,21 @@
 "use client";
 import React from "react";
-import { Roboto } from "next/font/google";
-
-const roboto = Roboto({ weight: "400", subsets: ["latin"] });
-const robotoBold = Roboto({ weight: "700", subsets: ["latin"] });
+import { useTranslations } from "next-intl"; // ✅ import from next-intl
 
 export default function CarouselHeader() {
+  const t = useTranslations("CarouselHeader"); // 👈 translation namespace
+
   return (
     <div className="carousel-content">
       <div className="content-bg">
-        <h2 className={`${robotoBold.className} text-sm`}>COMMUNITY MEMBERS</h2>
-        <p className={roboto.className}>
-          A community thrives when people unite with kindness, share knowledge,
-          and support each other, creating a stronger, brighter future for
-          everyone.
-        </p>
+        <h2 className="font-bold">{t("title")}</h2>
+
+        <p className="">{t("description")}</p>
       </div>
 
       <div className="community-btn">
         <a href="#" className="slider-btn">
-          Visit Community
+          {t("button")}
         </a>
       </div>
     </div>

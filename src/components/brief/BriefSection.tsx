@@ -18,7 +18,7 @@ export default function BriefSection({
   description,
   points,
   content,
-  buttonText = "Know More",
+  buttonText,
   imageSrc,
   imageAlt,
   reverse = false,

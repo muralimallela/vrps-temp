@@ -1,0 +1,71 @@
+{
+  "Navbar": {
+    "title": "Vaddera Reservation Porata Samithi",
+    "home": "Home",
+    "about": "About",
+    "communityMembers": "Community Members",
+    "photoGalleries": "Photo Galleries",
+    "newsAndItems": "News & Items",
+    "language": "Language",
+    "english": "English",
+    "telugu": "Telugu",
+    "login": "Login",
+    "signup": "Sign Up"
+  },
+  "Hero": {
+    "title": "\"For Growth,\nFor Honor\"",
+    "subtitle": "\"Educating our children, Empowering our community.\"",
+    "button": "JOIN THE COMMUNITY",
+    "alt": "Hero image"
+  },
+  "CarouselHeader": {
+    "title": "COMMUNITY MEMBERS",
+    "description": "A community thrives when people unite with kindness, share knowledge, and support each other, creating a stronger, brighter future for everyone.",
+    "button": "Visit Community"
+  },
+  "VadderaBrief": {
+    "title": "Vaddera Reservation Porata Samithi",
+    "paragraph1": "The Vaddera Reservation Struggle Committee (VRPS) is not just an association — it is an organization dedicated to bringing to the government’s attention all matters related to the welfare, reservations, and development that should rightfully be provided to the Vaddera community across the country.",
+    "paragraph2": "While many associations fight only to some extent for developmental activities, VRPS moves forward with unyielding determination to bring light into the lives of Vadderas throughout the nation.",
+    "button": "Know More",
+    "imageTitle": "VRPS - Vaddera Reservation Porata Samithi",
+    "imageAlt": "VRPS Logo - Vaddera Reservation Porata Samithi"
+  },
+  "HistoryBrief": {
+    "title": "History of VRPS (Vaddera Reservation Porata Samithi)",
+    "subtitle": "Origins and Early History",
+    "description": "The Vaddera Reservation Porata Samithi (VRPS) emerged as a strong socio-political movement representing the aspirations of the Vaddera community. The slogan “Gunnu Debba, Kalandebba – Kulaaniki Avasaaraṁ” (both the hammer blow and the chisel blow are equally necessary for the community) became a rallying cry for unity and self-respect.",
+    "imageAlt": "History of VRPS",
+    "buttonText": "Know More"
+  },
+  "CultureBrief": {
+    "title": "Cultural and Social Significance",
+    "paragraph1": "VRPS is more than just a political organization; it is a cultural renaissance. It revived pride in Vaddera identity, connected youth with the legacy of Ambedkar and Obanna, and created a new wave of confidence.",
+    "highlight": "The movement gave the community a platform to say loudly and clearly:",
+    "quote": "“We will no longer remain invisible. Our hammer and chisel have built this nation; now we demand our rightful place in it.”",
+    "imageAlt": "Cultural significance",
+    "buttonText": "Know More"
+  },
+  "AwarenessBrief": {
+    "title": "From Awareness to Empowerment",
+    "description": "The early phase of VRPS focused on awareness building. Activists organized meetings in villages, towns, and urban colonies where Vaddera families lived. They explained:",
+    "points": [
+      "Why reservations were essential.",
+      "How other backward communities progressed with state support.",
+      "How the Vadderas could no longer remain silent."
+    ],
+    "imageAlt": "Awareness efforts",
+    "buttonText": "Know More"
+  },
+  "Footer": {
+    "contactUs": "Contact us",
+    "introText": "We will be happy to listen to you and suggest event ideas you hadn’t considered.",
+    "formTitle": "We’d love to hear from you!",
+    "formSubtitle": "Let’s get in touch",
+    "firstName": "First Name",
+    "email": "Email",
+    "message": "Your Message",
+    "submit": "Submit",
+    "copyright": "Vaddera Reservation Porata Samithi |"
+  }
+}

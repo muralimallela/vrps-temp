@@ -1,17 +1,28 @@
-import { FaEnvelope, FaPhoneAlt, FaInstagram, FaFacebook, FaWhatsapp } from "react-icons/fa";
+"use client";
+
+import {
+  FaEnvelope,
+  FaPhoneAlt,
+  FaInstagram,
+  FaFacebook,
+  FaWhatsapp,
+} from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import { useTranslations } from "next-intl";
 
 export default function Footer() {
+  const t = useTranslations("Footer");
+
   return (
     <footer className="bg-[#ffe6bf]">
       <div className="py-12 px-6 md:px-16">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-10">
           {/* Left Side - Contact Info */}
           <div className="flex-1">
-            <h2 className="text-2xl font-bold text-[#5A1C16] mb-4">Contact us</h2>
-            <p className="text-[#2B0904] mb-6">
-              We will be happy to listen to you and suggest event ideas you hadn’t considered
-            </p>
+            <h2 className="text-2xl font-bold text-[#5A1C16] mb-4">
+              {t("contactUs")}
+            </h2>
+            <p className="text-[#2B0904] mb-6">{t("introText")}</p>
 
             {/* Email */}
             <div className="flex items-center gap-3 mb-3">
@@ -41,13 +52,15 @@ export default function Footer() {
           {/* Right Side - Contact Form */}
           <div className="flex-1 bg-white rounded-2xl shadow-lg p-6 md:p-10">
             <h3 className="text-xl font-semibold text-[#5A1C16] mb-2">
-              We’d love to hear from you!
+              {t("formTitle")}
             </h3>
-            <p className="text-[#5A1C16] mb-6">Let’s get in touch</p>
+            <p className="text-[#5A1C16] mb-6">{t("formSubtitle")}</p>
 
             <form className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#5A1C16] mb-1">First Name</label>
+                <label className="block text-sm font-medium text-[#5A1C16] mb-1">
+                  {t("firstName")}
+                </label>
                 <input
                   type="text"
                   className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#5A1C16] bg-gray-100"
@@ -55,7 +68,9 @@ export default function Footer() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#5A1C16] mb-1">Email</label>
+                <label className="block text-sm font-medium text-[#5A1C16] mb-1">
+                  {t("email")}
+                </label>
                 <input
                   type="email"
                   className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#5A1C16] bg-gray-100"
@@ -63,7 +78,9 @@ export default function Footer() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#5A1C16] mb-1">Your Message</label>
+                <label className="block text-sm font-medium text-[#5A1C16] mb-1">
+                  {t("message")}
+                </label>
                 <textarea
                   rows={4}
                   className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#5A1C16] bg-gray-100"
@@ -74,7 +91,7 @@ export default function Footer() {
                 type="submit"
                 className="bg-[#5A1C16] text-white px-6 py-2 rounded-md hover:bg-[#3E120F] transition"
               >
-                Submit
+                {t("submit")}
               </button>
             </form>
           </div>
@@ -83,8 +100,13 @@ export default function Footer() {
 
       {/* Copyright */}
       <div className="bg-[#EECDA3] text-center py-4 text-sm text-[#5A1C16]">
-        © {new Date().getFullYear()} Vaddera Reservation Porata Samithi |{" "}
-        <a href="https://vaddera.org" target="_blank" rel="noopener noreferrer" className="underline">
+        © {new Date().getFullYear()} {t("copyright")}{" "}
+        <a
+          href="https://vaddera.org"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline"
+        >
           vaddera.org
         </a>
       </div>

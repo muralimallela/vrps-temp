@@ -1,31 +1,27 @@
+"use client";
+
 import Image from "next/image";
 import BriefSection from "../brief/BriefSection";
+import { useTranslations } from "next-intl";
 
 export default function CultureBrief() {
+  const t = useTranslations("CultureBrief");
+
   return (
-    
     <BriefSection
-      title="Cultural and Social Significance"
+      title={t("title")}
       content={
         <>
-          VRPS is more than just a political organization; it is a cultural
-          renaissance. It revived pride in Vaddera identity, connected youth
-          with the legacy of Ambedkar and Obanna, and created a new wave of
-          confidence.
+          {t("paragraph1")}
           <br />
-          <span className="font-bold">
-            The movement gave the community a platform to say loudly and
-            clearly:
-          </span>
+          <span className="font-bold">{t("highlight")}</span>
           <br />
-          <span className="italic">
-            “We will no longer remain invisible. Our hammer and chisel have
-            built this nation; now we demand our rightful place in it.”
-          </span>
+          <span className="italic">{t("quote")}</span>
         </>
       }
       imageSrc="/culture.png"
-      imageAlt="Cultural significance"
+      imageAlt={t("imageAlt")}
+      buttonText = {t("buttonText")}
     />
   );
 }

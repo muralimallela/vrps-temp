@@ -1,14 +1,17 @@
+"use client";
 import React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { LanguageDropdown } from "./LanguageDropdown";
+import { NavbarActions } from "./NavbarActions";
 
-interface Link {
+interface NavLink {
   name: string;
   href: string;
 }
 
 interface Props {
-  items: Link[];
+  items: NavLink[];
   isOpen: boolean;
   onClose: () => void;
 }
@@ -43,16 +46,13 @@ export const NavbarMobileMenu: React.FC<Props> = ({
             </Link>
           </li>
         ))}
-        <li className="px-4 py-2 flex gap-4">
-          <Link href="/login" className="text-gray-700 hover:text-orange-600">
-            Login
-          </Link>
-          <Link
-            href="/signup"
-            className="ml-auto px-4 py-2 rounded-lg bg-orange-600 text-white hover:bg-orange-700 transition"
-          >
-            Sign Up
-          </Link>
+
+        {/* ✅ Language selector */}
+        <li>
+          <LanguageDropdown mobile onSelect={onClose} />
+        </li>
+        <li>
+          <NavbarActions isMobile />
         </li>
       </ul>
     </div>

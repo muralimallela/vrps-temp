@@ -1,5 +1,29 @@
 @import "tailwindcss";
 
-body{
-    font-family: 'Times New Roman', Times, serif;
+:root {
+  --font-english: "Noto Sans", sans-serif;
+  --font-telugu: "NTR", sans-serif;
+}
+
+/* Automatic font switching based on locale */
+html[lang="en"] {
+  font-family: var(--font-english);
+}
+
+html[lang="te"] {
+  font-family: var(--font-telugu);
+}
+
+/* Manual font usage */
+.font-english {
+  font-family: var(--font-english);
+}
+
+.font-telugu {
+  font-family: var(--font-telugu);
+}
+
+/* Optional smooth transition */
+html {
+  transition: font-family 0.3s ease;
 }
