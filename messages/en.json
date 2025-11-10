@@ -67,5 +67,111 @@
     "message": "Your Message",
     "submit": "Submit",
     "copyright": "Vaddera Reservation Porata Samithi |"
+  },
+
+  "vrpsHistory": {
+    "hero": {
+      "title": "History",
+      "subtitle": "The Vaddera community is not just a part of history—it is a living spirit of courage and progress."
+    },
+    "title": "History of VRPS (Vaddera Reservation Porata Samithi)",
+    "origins": {
+      "heading": "Origins and Early History",
+      "p1": "The Vaddera Reservation Porata Samithi (VRPS) emerged as a strong socio-political movement representing the aspirations of the Vaddera community. The slogan “Gunnu Debba, Kalandebba – Kulaaniki Avasaaram” (both the hammer blow and the chisel blow are equally necessary for the community) became a rallying cry for unity and self-respect.",
+      "p2": "Initially, the Vaddera community was known for its traditional occupation of stone cutting and related labor. However, as social and economic changes unfolded, education and reservation became recognized as essential tools for empowerment. VRPS transformed the movement by spreading awareness that education and political rights were crucial for the future of the Vaddera people."
+    },
+    "culture": {
+      "heading": "Cultural and Social Contributions",
+      "p1": "VRPS undertook several activities to highlight the importance of education among rural Vadderas. By organizing rallies, awareness meetings, and cultural events, the movement was able to penetrate even the most remote villages.",
+      "p2": "Through different media platforms, VRPS successfully reached marginalized Vaddera families, gaining widespread support. This created a sense of unity and cultural pride in the community, while also inspiring young people to demand educational opportunities and equal rights through reservations."
+    },
+    "leadership": {
+      "heading": "Leadership and Ideological Foundations",
+      "p1": "The movement was led by unemployed youth and socially conscious activists determined to address the failures of traditional political leaders within the community. Their approach was influenced by the philosophies of Vadde Obanna, K.T. Venkata Swamy, Dr. B.R. Ambedkar, and Babu Jagjivan Ram.",
+      "p2": "Inspired by these leaders, VRPS adopted principles of equality, justice, and social reform. The organization strongly opposed discrimination and campaigned for fair reservation benefits to uplift the Vaddera community."
+    },
+    "struggles": {
+      "heading": "Struggles and Political Mobilization",
+      "p1": "As the movement gained strength, VRPS entered the stage of direct struggle (Porata Dasha). The demand for “Kalandebba” – recognition of the Vaddera community under the Scheduled Tribe (ST) category – became its central objective.",
+      "p2": "On 11th January 2022, the first official meeting of VRPS was held, marking the birth anniversary of Vaddera freedom fighter Vadde Obanna. This date was symbolic, connecting the historical struggle for freedom with the modern fight for social justice."
+    },
+    "impact": {
+      "heading": "Major Activities and Impact",
+      "points": {
+        "1": "Organized awareness programs, rallies, and seminars across villages and towns in Hyderabad and Medchal–Ranga Reddy districts.",
+        "2": "Mobilized nearly 1000 activists and supporters, spreading the message of education and reservation rights.",
+        "3": "Conducted a large rally on 11th January 2023, showcasing the unity and determination of the Vaddera community.",
+        "4": "Successfully created strong awareness among the youth and marginalized families, ensuring that the demand for ST reservation gained political and social recognition."
+      }
+    }
+  },
+  "vadderaCulture": {
+    "hero": {
+      "title": "Culture",
+      "subtitle": "The Vaddera culture is not just a collection of traditions—it is a living journey of resilience, respect, and pride that connects the past with the future."
+    },
+    "section1": {
+      "heading": "The Vaddera Community – Culture, Heritage & Identity",
+      "p1": "The Vaddera community has a history deeply rooted in hard work, craftsmanship, and resilience. Traditionally, Vadderas were known for their expertise in stone cutting, quarrying, and construction works. Their hands shaped the very foundations of cities, temples, roads, and buildings across India. Every stone they carved carried the strength of their struggle and the dignity of their labor."
+    },
+    "section2": {
+      "heading": "Cultural Identity",
+      "p1": "The Vaddera Reservation Porata Samithi (VRPS) emerged as a strong socio-political movement representing the aspirations of the Vaddera community. The slogan “Gunnu Debba, Kalandebba – Kulaaniki Avasaaraṁ” (both the hammer blow and the chisel blow are equally necessary for the community) became a rallying cry for unity and self-respect.",
+      "p2": "Initially, the Vaddera community was known for its traditional occupation of stone cutting and related labor. However, as social and economic changes unfolded, education and reservation became recognized as essential tools for empowerment. VRPS transformed the movement by spreading awareness that education and political rights were crucial for the future of the Vaddera people."
+    },
+    "section3": {
+      "heading": "Values & Traditions",
+      "points": {
+        "1": "Dignity of Work – Vadderas have always believed that every kind of work has honor, and their lives are an example of hard work leading to progress.",
+        "2": "Sacrifice & Service – Despite facing hardships, the community has contributed immensely to nation building, from construction labor to skilled craftsmanship.",
+        "3": "Faith & Devotion – Cultural identity is also tied to Vadde Obanna, a respected ancestral figure remembered for his leadership and sacrifice. His Jayanti and Vardhanti are celebrated as days of community pride."
+      }
+    },
+    "section4": {
+      "heading": "Modern Transformation",
+      "p1": "Today, the Vaddera community is moving beyond its traditional occupations, embracing education, science, law, journalism, and leadership. Many youth and leaders are stepping forward to ensure that the community not only preserves its cultural roots but also achieves rightful recognition in society.",
+      "p2": "From stone cutters to scholars and professionals, the journey of the Vadderas is one of struggle, survival, and success.",
+      "p3": "The community is not just demanding rights and reservations but is also contributing actively in politics, social reform, and education."
+    }
+  },
+  "empowerment": {
+    "hero": {
+      "title": "Empowerment",
+      "subtitle": "Empowerment for the Vaddera community is not just about rights, it is about restoring dignity, creating opportunities, and building a future where no one is left behind.",
+      "subtitle2": "Empowerment Through VRPS (Vaddera Reservation Porata Samithi)"
+    },
+    "birth": {
+      "heading": "Birth of the Movement",
+      "p1": "The Vaddera Reservation Porata Samithi (VRPS) was founded when educated youth like Advocate Gunji Santosh Kumar, Vadde Raj, Tammisetti Shivakrishna, and Journalist Battula Upendra came together with a common vision. Each of them had personally experienced discrimination, denial of opportunities, and economic struggles.",
+      "p2": "From their hardships emerged a conviction — if future generations of Vadderas are to live with dignity, the community must secure its rightful reservation. Thus, VRPS was born as a revolutionary platform of unity, justice, and empowerment for the entire Vaddera community."
+    },
+    "awareness": {
+      "heading": "Awareness to Awakening",
+      "p1": "In its early days, VRPS prioritized spreading awareness across villages and towns. Members explained that education and reservation were the true keys to empowerment. Through door-to-door campaigns, public rallies, and cultural programs, the message began to reach thousands of Vaddera families.",
+      "p2": "They also revived the inspiring legacies of community icons like Vadde Obanna, K.T. Venkata Swamy, and national leaders like Dr. B.R. Ambedkar and Babu Jagjivan Ram, reminding people of the sacrifices and struggles that shaped the path of social justice."
+    },
+    "protests": {
+      "heading": "Historic Protests",
+      "p1": "For over 60 years, the Vaddera community had remained unheard. That changed in 2022, when VRPS organized the historic Chalo Assembly in Hyderabad. Despite resistance, hundreds of Vaddera youth marched demanding ST reservation. The movement gained strength, and by 2023, another massive protest drew thousands, sending a clear message that the government could no longer ignore the Vaddera voice."
+    },
+    "politics": {
+      "heading": "Political Recognition",
+      "p1": "The dedication of VRPS soon drew political and cultural recognition. Leaders such as K.P. Vivekananda, Kishan Reddy, Etela Rajender, and cultural activist Gaddar extended their support. For the first time in Telangana Assembly, the issue of Vaddera ST reservation was raised officially — marking a turning point where the community’s struggle entered mainstream politics."
+    },
+    "goals": {
+      "heading": "Social Empowerment Goals of VRPS",
+      "points": {
+        "1": "Establishing special Gurukuls and scholarships for Vaddera children.",
+        "2": "Ensuring land distribution and housing for landless families.",
+        "3": "Providing accident insurance and financial support for quarry & construction workers.",
+        "4": "Creating a Vaddera Corporation to fund higher education, business, and self-employment.",
+        "5": "Promoting women empowerment through self-help groups, skill training, and cottage industries."
+      }
+    },
+    "unity": {
+      "heading": "Unity as Strength",
+      "p1": "In the past, Vaddera society was fragmented into many small associations, each with limited power. VRPS united them under one strong banner, giving the community a collective identity and leadership. Today, VRPS has transformed silence into courage and despair into determination.",
+      "quote": "Ask for our rights, fight for our rights, achieve our rights."
+    }
   }
 }

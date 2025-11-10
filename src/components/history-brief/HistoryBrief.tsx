@@ -15,6 +15,7 @@ export default function HistoryBrief() {
       imageSrc="/history.png"
       imageAlt={t("imageAlt")}
       buttonText={t("buttonText")}
+      href={"history"}
     />
   );
 }

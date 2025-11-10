@@ -16,7 +16,7 @@ interface NavbarActionsProps {
 export const NavbarActions: React.FC<NavbarActionsProps> = ({ isMobile }) => {
   const t = useTranslations("Navbar");
 
-  // ✅ Common UI for sign-in & sign-up buttons
+
   const authButtons = (
     <>
       <span className="text-gray-700 hover:text-orange-600 cursor-pointer">

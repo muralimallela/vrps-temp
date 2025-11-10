@@ -22,6 +22,7 @@ export default function CultureBrief() {
       imageSrc="/culture.png"
       imageAlt={t("imageAlt")}
       buttonText = {t("buttonText")}
+      href = "vaddera-culture"
     />
   );
 }

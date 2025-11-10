@@ -19,6 +19,7 @@ export default function AwarenessBrief() {
       buttonText = {t("buttonText")}
       imageSrc="/history.png"
       imageAlt={t("imageAlt")}
+      href="empowerment"
     />
   );
 }

@@ -5,6 +5,8 @@ import { Navbar } from "../../components/navbar/Navbar";
 import Footer from "../../components/footer/Footer";
 import { Roboto, NTR, Noto_Sans } from "next/font/google";
 import { getLocale, getMessages } from "next-intl/server";
+import FloatingIcons from "@/src/components/SocialLink";
+import ScrollToTop from "@/src/components/ScrollToTop";
 
 const notoSans = Noto_Sans({
   subsets: ["latin"],
@@ -38,8 +40,10 @@ export default async function LocaleLayout({
       <body>
         <NextIntlClientProvider messages={messages}>
           <Navbar />
+          <FloatingIcons/>
           {children}
           <Footer />
+          <ScrollToTop/>
         </NextIntlClientProvider>
       </body>
     </html>

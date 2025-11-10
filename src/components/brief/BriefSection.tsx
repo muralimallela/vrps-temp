@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 type BriefSectionProps = {
   title: string;
@@ -10,6 +11,7 @@ type BriefSectionProps = {
   imageSrc: string;
   imageAlt: string;
   reverse?: boolean;
+  href?: string;
 };
 
 export default function BriefSection({
@@ -21,6 +23,7 @@ export default function BriefSection({
   buttonText,
   imageSrc,
   imageAlt,
+  href,
   reverse = false,
 }: BriefSectionProps) {
   return (
@@ -64,10 +67,11 @@ export default function BriefSection({
               {content}
             </div>
           )}
-
-          <button className="mt-6 px-6 py-3 bg-white shadow-md rounded-lg font-semibold text-gray-900 hover:bg-gray-100 transition">
-            {buttonText}
-          </button>
+          <Link href={href ? href : "#"}>
+            <button className="mt-6 px-6 py-3 bg-white shadow-md rounded-lg font-semibold text-gray-900 hover:bg-gray-100 transition">
+              {buttonText}
+            </button>
+          </Link>
         </div>
 
         {/* Right Image */}
