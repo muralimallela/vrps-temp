@@ -4,7 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { Navbar } from "../../components/navbar/Navbar";
 import Footer from "../../components/footer/Footer";
 import { Roboto, NTR, Noto_Sans } from "next/font/google";
-import { getLocale, getMessages } from "next-intl/server";
+import { getLocale, getMessages, setRequestLocale } from "next-intl/server";
 import FloatingIcons from "@/src/components/SocialLink";
 import ScrollToTop from "@/src/components/ScrollToTop";
 
@@ -27,6 +27,8 @@ export default async function LocaleLayout({
 }) {
   const locale = await getLocale();
   if (!locale) notFound();
+
+  setRequestLocale(locale)
 
   const messages = await getMessages();
 

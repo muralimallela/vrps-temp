@@ -16,7 +16,15 @@ export const Navbar: React.FC = () => {
 
   const navLinks = [
     { name: t("home"), href: "/" },
-    { name: t("about"), href: "/about" },
+    {
+      name: t("about.name"),
+      href: "#",
+      dropdown: [
+        { name: t("about.history"), href: "/history" },
+        { name: t("about.vadderaCulture"), href: "/vaddera-culture" },
+        { name: t("about.empowerment"), href: "/empowerment" },
+      ],
+    },
     { name: t("communityMembers"), href: "/community-members" },
     { name: t("photoGalleries"), href: "/photo-galleries" },
     { name: t("newsAndItems"), href: "/news-and-items" },
@@ -38,7 +46,7 @@ export const Navbar: React.FC = () => {
           <NavbarBrand />
           <div className="hidden md:flex items-center gap-4">
             <NavbarLinks links={navLinks} />
-            <LanguageDropdown /> 
+            <LanguageDropdown />
             <NavbarActions />
           </div>
           <NavbarToggle

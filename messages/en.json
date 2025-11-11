@@ -2,7 +2,12 @@
   "Navbar": {
     "title": "Vaddera Reservation Porata Samithi",
     "home": "Home",
-    "about": "About",
+    "about": {
+      "name" : "About",
+      "history" : "History",
+      "vadderaCulture" : "Vaddera Culture",
+      "empowerment" : "Empowerment"
+    },
     "communityMembers": "Community Members",
     "photoGalleries": "Photo Galleries",
     "newsAndItems": "News & Items",

@@ -24,7 +24,7 @@ const VadderaCulture: React.FC = () => {
         {/* Right Side Image */}
         <div className="flex-1 flex justify-center lg:justify-end">
           <Image
-            src="/vaddera-community-work.png"
+            src="/vaddera-culture-work.jpg"
             alt="Vaddera Culture Image"
             width={1040}
             height={527}
