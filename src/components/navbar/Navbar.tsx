@@ -25,8 +25,8 @@ export const Navbar: React.FC = () => {
         { name: t("about.empowerment"), href: "/empowerment" },
       ],
     },
-    { name: t("communityMembers"), href: "/community-members" },
-    { name: t("photoGalleries"), href: "/photo-galleries" },
+    { name: t("communityMembers"), href: "/executive-committee" },
+    { name: t("photoGalleries"), href: "/#" },
     { name: t("newsAndItems"), href: "/news-and-items" },
   ];
   const containerSkin = atTop
