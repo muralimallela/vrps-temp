@@ -3,10 +3,10 @@
     "title": "Vaddera Reservation Porata Samithi",
     "home": "Home",
     "about": {
-      "name" : "About",
-      "history" : "History",
-      "vadderaCulture" : "Vaddera Culture",
-      "empowerment" : "Empowerment"
+      "name": "About",
+      "history": "History",
+      "vadderaCulture": "Vaddera Culture",
+      "empowerment": "Empowerment"
     },
     "communityMembers": "Community Members",
     "photoGalleries": "Photo Galleries",
@@ -178,5 +178,27 @@
       "p1": "In the past, Vaddera society was fragmented into many small associations, each with limited power. VRPS united them under one strong banner, giving the community a collective identity and leadership. Today, VRPS has transformed silence into courage and despair into determination.",
       "quote": "Ask for our rights, fight for our rights, achieve our rights."
     }
+  },
+
+  "executiveCommittee": {
+    "title": "Executive Committee",
+    "subtitle": "The Vaddera community is a symbol of hard work, unity, and the strength to build a brighter future.",
+    "members": [
+      {
+        "name": "Gunji Santosh Kumar Vadde Raju",
+        "title": "President of VRPS",
+        "role": "Founder of VRPS"
+      },
+      {
+        "name": "Battula Upendra",
+        "title": "State Vice President of VRPS",
+        "role": "One of the Founders of VRPS"
+      },
+      {
+        "name": "Tammisetti Shivakrishna",
+        "title": "State General Secretary of VRPS",
+        "role": "One of the Founders of VRPS"
+      }
+    ]
   }
 }
