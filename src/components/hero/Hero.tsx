@@ -29,7 +29,7 @@ export default function Hero() {
       />
       <div className={`relative z-10 text-white text-center px-4 font-bold`}>
         {/* Title */}
-        <h3 className="text-3xl sm:text-4xl md:text-6xl lg:text-[97.26px] leading-tight whitespace-pre-line">
+        <h3 className="text-3xl sm:text-4xl md:text-6xl  leading-tight whitespace-pre-line">
           {t("title")}
         </h3>
 

@@ -24,9 +24,9 @@ export const NavbarLinks: React.FC<Props> = ({ links }) => {
 
   return (
     <ul className="hidden md:flex items-center gap-6 relative">
-      {links.map((l) => (
+      {links.map((l, index) => (
         <li
-          key={l.href}
+          key={l.name || `link-${index}`}
           className="relative group"
           onMouseEnter={() => setOpenDropdown(l.name)}
           onMouseLeave={() => setOpenDropdown(null)}

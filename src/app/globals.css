@@ -27,3 +27,27 @@ html[lang="te"] {
 html {
   transition: font-family 0.3s ease;
 }
+
+@keyframes vrps-logo-loading {
+  0%,
+  100% {
+    opacity: 0.78;
+    transform: translateY(0) scale(0.96);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-8px) scale(1.04);
+  }
+}
+
+.vrps-logo-loader {
+  animation: vrps-logo-loading 1.5s ease-in-out infinite;
+  filter: drop-shadow(0 10px 14px rgba(106, 22, 10, 0.2));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vrps-logo-loader {
+    animation: none;
+  }
+}

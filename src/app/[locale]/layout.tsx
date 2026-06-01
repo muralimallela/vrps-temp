@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { Navbar } from "../../components/navbar/Navbar";
 import Footer from "../../components/footer/Footer";
-import { Roboto, NTR, Noto_Sans } from "next/font/google";
+import { NTR, Noto_Sans } from "next/font/google";
 import { getLocale, getMessages, setRequestLocale } from "next-intl/server";
 import FloatingIcons from "@/src/components/SocialLink";
 import ScrollToTop from "@/src/components/ScrollToTop";
@@ -38,16 +38,14 @@ export default async function LocaleLayout({
       : `${notoSans.variable} ${notoSans.className}`;
 
   return (
-    <html lang={locale} className={currentFont}>
-      <body>
-        <NextIntlClientProvider messages={messages}>
-          <Navbar />
-          <FloatingIcons/>
-          {children}
-          <Footer />
-          <ScrollToTop/>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <div lang={locale} className={currentFont}>
+      <NextIntlClientProvider messages={messages}>
+        <Navbar />
+        <FloatingIcons/>
+        {children}
+        <Footer />
+        <ScrollToTop/>
+      </NextIntlClientProvider>
+    </div>
   );
 }

@@ -9,6 +9,12 @@
       "empowerment": "Empowerment"
     },
     "communityMembers": "Community Members",
+    "transparency": {
+      "name": "Community",
+      "members": "Members",
+      "supporters": "Supporters",
+      "impact": "Community Impact"
+    },
     "photoGalleries": "Photo Galleries",
     "newsAndItems": "News & Items",
     "language": "Language",

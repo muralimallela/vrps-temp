@@ -14,5 +14,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <ClerkProvider>{children}</ClerkProvider>;
+  return (
+    <html lang="en">
+      <body>
+        <ClerkProvider>{children}</ClerkProvider>
+      </body>
+    </html>
+  );
 }
