@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -12,7 +12,10 @@ import {
   HiOutlineGlobeAlt,
   HiOutlineSparkles,
   HiOutlineCheckBadge,
+  HiOutlineHeart,
+  HiOutlineArrowRight,
 } from "react-icons/hi2";
+
 function loadRazorpayScript() {
   return new Promise<boolean>((resolve) => {
     if (window.Razorpay) {
@@ -66,10 +69,29 @@ export default function MembershipPage() {
   const [amount, setAmount] = useState(99);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [checkingProfile, setCheckingProfile] = useState(true);
+  const [userProfile, setUserProfile] = useState<any>(null);
   const [publicVisibility, setPublicVisibility] = useState<
     "private" | "public" | "anonymous"
-  >("private");
+  >("public");
   const [publicDisplayName, setPublicDisplayName] = useState("");
+
+  useEffect(() => {
+    async function checkProfile() {
+      try {
+        const res = await fetch("/api/profile");
+        const data = await res.json();
+        if (data.success && data.data) {
+          setUserProfile(data.data);
+        }
+      } catch (e) {
+        // Ignore error for guest visitors
+      } finally {
+        setCheckingProfile(false);
+      }
+    }
+    checkProfile();
+  }, []);
 
   const formattedAmount = useMemo(
     () =>
@@ -130,10 +152,23 @@ export default function MembershipPage() {
         description: "Activate VRPS Membership",
         order_id: order.id,
         notes: order.notes,
-        handler: () => {
+        handler: async (response: any) => {
           setMessage(
-            "Thank you for joining VRPS. Your membership is being activated and should be ready within a few seconds.",
+            "Thank you for joining VRPS. Activating your membership and generating your official Member ID...",
           );
+          try {
+            await fetch("/api/membership/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id || order.id,
+                razorpay_payment_id: response.razorpay_payment_id || "pay_mock",
+              }),
+            });
+          } catch (e) {
+            console.error("Payment verification call failed:", e);
+          }
+          setTimeout(() => window.location.reload(), 1500);
         },
         modal: {
           ondismiss: () =>
@@ -159,6 +194,91 @@ export default function MembershipPage() {
       setLoading(false);
     }
   };
+
+  if (checkingProfile) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#6A160A] border-t-transparent"></div>
+      </div>
+    );
+  }
+
+  // Active Member UX View
+  if (userProfile && userProfile.isMember) {
+    return (
+      <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#fff8ef,_#fdeed8_35%,_#f4d8b0_100%)] px-4 py-8 md:px-8 md:py-12">
+        <section className="mx-auto max-w-4xl">
+          <div className="overflow-hidden rounded-3xl border border-[#e4c69d] bg-white p-6 shadow-xl md:p-10">
+            <div className="flex flex-col items-center text-center">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#e8f5e9] text-[#2e7d32] shadow-inner">
+                <HiOutlineCheckBadge className="h-12 w-12" />
+              </div>
+
+              <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[#2e7d32] px-4 py-1 text-xs font-bold uppercase tracking-wider text-white">
+                Active VRPS Member
+              </span>
+
+              <h1 className="mt-3 text-3xl font-black text-[#3d120d] md:text-4xl">
+                Welcome, {userProfile.name}!
+              </h1>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#6a4a3b] md:text-base">
+                You are an active member of Vaddera Reservation Porata Samithi. Thank you for supporting community empowerment and representation!
+              </p>
+
+              <div className="mt-6 w-full rounded-2xl border border-[#eddcc8] bg-[#fffaf4] p-4 text-left md:p-6">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <p className="text-[#8a5b3a] text-xs font-semibold">Member ID</p>
+                    <p className="font-bold text-[#6A160A] text-lg">{userProfile.membershipId || userProfile.userId || "Active Member"}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-[#8a5b3a]">Membership Status</p>
+                    <p className="text-lg font-bold text-[#2e7d32]">Verified Active</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 grid w-full gap-4 sm:grid-cols-2">
+                <Link
+                  href="/id-card"
+                  className="flex items-center justify-between rounded-xl border border-[#6A160A] bg-[#6A160A] p-4 text-left font-bold text-white transition hover:bg-[#541007]"
+                >
+                  <div className="flex items-center gap-3">
+                    <HiOutlineIdentification className="h-6 w-6" />
+                    <div>
+                      <p className="text-sm">Digital Member ID Card</p>
+                      <p className="text-xs font-normal text-white/80">View & Download PDF</p>
+                    </div>
+                  </div>
+                  <HiOutlineArrowRight className="h-5 w-5" />
+                </Link>
+
+                <Link
+                  href="/donations"
+                  className="flex items-center justify-between rounded-xl border border-[#eddcc8] bg-[#fff3e5] p-4 text-left font-bold text-[#6A160A] transition hover:bg-[#ffe8cf]"
+                >
+                  <div className="flex items-center gap-3">
+                    <HiOutlineHeart className="h-6 w-6 text-[#0F5F54]" />
+                    <div>
+                      <p className="text-sm">Make a Donation</p>
+                      <p className="text-xs font-normal text-[#6a4a3b]">Support ongoing programs</p>
+                    </div>
+                  </div>
+                  <HiOutlineArrowRight className="h-5 w-5 text-[#6A160A]" />
+                </Link>
+              </div>
+
+              <div className="mt-6 text-center">
+                <Link href="/profile" className="text-xs font-semibold text-[#6A160A] underline hover:text-[#3d120d]">
+                  Update My Profile & Address Details
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#fff8ef,_#fdeed8_35%,_#f4d8b0_100%)] px-4 py-8 md:px-8 md:py-12">
@@ -289,89 +409,48 @@ export default function MembershipPage() {
               </p>
             </div>
 
-            <div className="mt-6 rounded-xl border border-[#cce3dc] bg-[#f0f7f5] p-4">
-              <div className="mb-4 flex items-center gap-2">
-                <HiOutlineSparkles className="h-5 w-5 text-[#0F5F54]" />
-                <h4 className="font-semibold text-[#0F5F54]">
-                  Membership Visibility
-                </h4>
-              </div>
+            <div className="mt-6 rounded-xl border border-[#cce3dc] bg-white p-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                <div>
+                  <h4 className="font-bold text-[#3d120d] text-sm flex items-center gap-1.5">
+                    <HiOutlineSparkles className="h-4 w-4 text-[#0F5F54]" />
+                    Membership Listing Preference
+                  </h4>
+                  <p className="text-xs text-[#6a4a3b] mt-0.5">
+                    Choose how your membership appears on the community roll.
+                  </p>
+                </div>
 
-              <p className="mb-4 text-xs text-[#486a63]">
-                Choose how your membership appears in the community.
-              </p>
-
-              <div className="space-y-2">
-                {[
-                  {
-                    id: "private",
-                    title: "Private",
-                    desc: "Not listed publicly",
-                    icon: HiOutlineLockClosed,
-                  },
-                  {
-                    id: "anonymous",
-                    title: "Anonymous",
-                    desc: "Show support without your name",
-                    icon: HiOutlineUser,
-                  },
-                  {
-                    id: "public",
-                    title: "Public",
-                    desc: "Show your name publicly",
-                    icon: HiOutlineGlobeAlt,
-                  },
-                ].map((option) => {
-                  const Icon = option.icon;
-                  const selected = publicVisibility === option.id;
-
-                  return (
-                    <button
-                      key={option.id}
-                      type="button"
-                      onClick={() =>
-                        setPublicVisibility(
-                          option.id as "private" | "anonymous" | "public",
-                        )
-                      }
-                      className={`w-full rounded-lg border p-3 text-left transition ${
-                        selected
-                          ? "border-[#0F5F54] bg-white shadow-sm"
-                          : "border-[#e8d4b8] bg-white hover:bg-[#fffaf4]"
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`flex h-8 w-8 items-center justify-center rounded-lg ${
-                            selected
-                              ? "bg-[#dff1ed] text-[#0F5F54]"
-                              : "bg-[#fff3e5] text-[#8B6F47]"
-                          }`}
-                        >
-                          <Icon className="h-4 w-4" />
-                        </div>
-
-                        <div className="flex-1">
-                          <p className="text-sm font-semibold text-[#5A1C16]">
-                            {option.title}
-                          </p>
-                          <p className="text-xs text-[#8B6F47]">
-                            {option.desc}
-                          </p>
-                        </div>
-
-                        {selected && (
-                          <HiOutlineCheckBadge className="h-5 w-5 text-[#0F5F54]" />
-                        )}
-                      </div>
-                    </button>
-                  );
-                })}
+                <div className="inline-flex rounded-xl bg-[#f0f7f5] p-1 border border-[#cce3dc] shrink-0">
+                  {[
+                    { id: "public", label: "Public", icon: HiOutlineGlobeAlt },
+                    { id: "anonymous", label: "Anonymous", icon: HiOutlineUser },
+                    { id: "private", label: "Private", icon: HiOutlineLockClosed },
+                  ].map((tab) => {
+                    const Icon = tab.icon;
+                    const selected = publicVisibility === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setPublicVisibility(tab.id as any)}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                          selected
+                            ? "bg-[#0F5F54] text-white shadow-sm"
+                            : "text-[#486a63] hover:text-[#0F5F54]"
+                        }`}
+                      >
+                        <Icon className="h-3.5 w-3.5" />
+                        <span>{tab.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
               {publicVisibility === "public" && (
-                <div className="mt-3 rounded-lg border border-[#cce3dc] bg-white p-3">
-                  <label>
+                <div className="mt-3 pt-3 border-t border-[#cce3dc]">
+                  <label className="block">
                     <p className="mb-1 text-xs font-semibold text-[#5A1C16]">
                       Display Name (Optional)
                     </p>
@@ -380,13 +459,9 @@ export default function MembershipPage() {
                       type="text"
                       value={publicDisplayName}
                       onChange={(e) => setPublicDisplayName(e.target.value)}
-                      placeholder="Enter display name"
-                      className="w-full rounded-lg border border-[#dcc9a8] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0F5F54]"
+                      placeholder="Leave blank to use profile name"
+                      className="w-full rounded-lg border border-[#dcc9a8] px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0F5F54]"
                     />
-
-                    <p className="mt-1 text-xs text-[#8B6F47]">
-                      Leave blank to use your profile name.
-                    </p>
                   </label>
                 </div>
               )}

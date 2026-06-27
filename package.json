@@ -7,7 +7,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "init:appwrite": "npx tsx scripts/init-appwrite.ts"
   },
   "author": "Murali Krishna Mallela",
   "license": "UNLICENSED",
@@ -17,16 +18,18 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.31.10",
+    "html-to-image": "^1.11.13",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.18.1",
+    "jspdf": "^4.2.1",
     "next": "15.5.2",
     "next-intl": "^4.5.0",
+    "node-appwrite": "^26.2.0",
     "pdfkit": "^0.17.2",
     "qrcode": "^1.5.4",
+    "razorpay": "^2.9.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.5.0",
-    "razorpay": "^2.9.6",
     "svix": "^1.76.1",
     "swiper": "^12.0.1",
     "xlsx": "^0.18.5"
@@ -39,8 +42,10 @@
     "@types/qrcode": "^1.5.5",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
+    "dotenv": "^17.4.2",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.13",
+    "tsx": "^4.22.4",
     "typescript": "^5.9.2"
   }
 }

@@ -5,6 +5,10 @@ import User from "@/src/models/User";
 import Address from "@/src/models/Address";
 import { rowsToCsvBuffer, rowsToXlsxBuffer } from "@/src/lib/export";
 
+function escapeRegex(text: string) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 export async function GET(req: Request) {
   try {
     await connectDB();
@@ -19,38 +23,72 @@ export async function GET(req: Request) {
     const search = searchParams.get("search");
     const format = searchParams.get("format");
 
+    // Build optimized Address filter first if location parameters exist
+    let allowedUserIds: string[] | null = null;
+    if (state || district || mandal || village) {
+      const addressQuery: Record<string, unknown> = {};
+      if (state) addressQuery.state = state;
+      if (district) addressQuery.district = district;
+      if (mandal) addressQuery.mandal = mandal;
+      if (village) addressQuery.village = village;
+
+      const matchingAddresses = await Address.find(addressQuery).select("userId").lean();
+      allowedUserIds = matchingAddresses.map((a) => a.userId);
+    }
+
+    // Build User query
     const userQuery: Record<string, unknown> = { isDeleted: { $ne: true } };
     if (category === "members") userQuery.isMember = true;
     if (category === "non-members") userQuery.isMember = false;
-    if (search) {
+    if (allowedUserIds !== null) {
+      userQuery.userId = { $in: allowedUserIds };
+    }
+
+    if (search && search.trim()) {
+      const safeSearch = escapeRegex(search.trim());
+      const searchRegex = new RegExp(safeSearch, "i");
+
+      // Also search addresses matching search term if user search is performed
+      const matchingAddr = await Address.find({
+        $or: [
+          { state: searchRegex },
+          { district: searchRegex },
+          { mandal: searchRegex },
+          { village: searchRegex },
+        ],
+      }).select("userId").lean();
+
+      const addrUserIds = matchingAddr.map((a) => a.userId);
+
       userQuery.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { userId: { $regex: search, $options: "i" } },
-        { mobile: { $regex: search, $options: "i" } },
+        { name: searchRegex },
+        { userId: searchRegex },
+        { membershipId: searchRegex },
+        { mobile: searchRegex },
+        { email: searchRegex },
+        { userId: { $in: addrUserIds } },
       ];
     }
 
+    // Fetch matching users efficiently
     const users = await User.find(userQuery).lean();
     const userIds = users.map((user) => user.userId);
-    const addressQuery: Record<string, unknown> = { userId: { $in: userIds } };
-    if (state) addressQuery.state = state;
-    if (district) addressQuery.district = district;
-    if (mandal) addressQuery.mandal = mandal;
-    if (village) addressQuery.village = village;
 
-    const addresses = await Address.find(addressQuery).lean();
+    // Fetch addresses for matched users
+    const addresses = userIds.length > 0 
+      ? await Address.find({ userId: { $in: userIds } }).lean() 
+      : [];
     const addressMap = new Map(addresses.map((item) => [item.userId, item]));
 
-    const filtered = users
-      .filter((user) => {
-        if (!state && !district && !mandal && !village) return true;
-        return addressMap.has(user.userId);
-      })
-      .map((user) => ({ ...user, address: addressMap.get(user.userId) ?? null }));
+    const filtered = users.map((user) => ({
+      ...user,
+      address: addressMap.get(user.userId) ?? null,
+    }));
 
     if (format === "csv") {
       const rows = filtered.map((user: any) => ({
         userId: user.userId,
+        membershipId: user.membershipId || "-",
         name: user.name,
         mobile: user.mobile,
         email: user.email,
@@ -73,6 +111,7 @@ export async function GET(req: Request) {
     if (format === "xlsx") {
       const rows = filtered.map((user: any) => ({
         userId: user.userId,
+        membershipId: user.membershipId || "-",
         name: user.name,
         mobile: user.mobile,
         email: user.email,
@@ -98,4 +137,3 @@ export async function GET(req: Request) {
     return fail(error, 403);
   }
 }
-

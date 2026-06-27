@@ -51,9 +51,9 @@ export const Navbar: React.FC = () => {
           containerSkin,
         ].join(" ")}
       >
-        <div className="max-w-screen-xl mx-auto px-4 py-3 md:py-4 flex items-center justify-between gap-4">
+        <div className="w-full px-4 md:px-8 lg:px-12 py-3 md:py-4 flex items-center justify-between gap-4">
           <NavbarBrand />
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4 lg:gap-6">
             <NavbarLinks links={navLinks} />
             <LanguageDropdown />
             <NavbarActions />

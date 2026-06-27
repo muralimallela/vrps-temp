@@ -2,7 +2,6 @@ import { connectDB } from "@/src/lib/mongodb";
 import { requireUser } from "@/src/lib/auth";
 import { fail, ok } from "@/src/lib/http";
 import { assertMinimumAmount, isAddressComplete } from "@/src/lib/validation";
-import { generateMembershipId } from "@/src/lib/ids";
 import { getRazorpayClient } from "@/src/lib/razorpay";
 import Membership from "@/src/models/Membership";
 import Address from "@/src/models/Address";
@@ -12,6 +11,16 @@ export async function POST(req: Request) {
   try {
     await connectDB();
     const user = await requireUser();
+
+    if (user.isMember) {
+      return fail("You are already an active VRPS member.", 400);
+    }
+
+    const activeMembership = await Membership.findOne({ userId: user.userId, status: "active" });
+    if (activeMembership) {
+      return fail("You are already an active VRPS member.", 400);
+    }
+
     const body = await req.json();
     const amount = Number(body.amount ?? 99);
     assertMinimumAmount(amount);
@@ -21,8 +30,9 @@ export async function POST(req: Request) {
       return fail("Complete address is required for membership", 400);
     }
 
-    const membershipId = await generateMembershipId();
-    const receipt = `membership_${membershipId}`;
+    // Temporary pending ID ref (Real Member ID will only generate on successful payment)
+    const tempMembershipId = `PENDING_${user.userId}_${Date.now().toString().slice(-4)}`;
+    const receipt = `mem_ord_${Date.now()}`;
 
     if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
       return fail(
@@ -36,11 +46,11 @@ export async function POST(req: Request) {
       amount: Math.round(amount * 100),
       currency: "INR",
       receipt,
-      notes: { userId: user.userId, membershipId },
+      notes: { userId: user.userId },
     });
 
     const membership = await Membership.create({
-      membershipId,
+      membershipId: tempMembershipId,
       userId: user.userId,
       membershipFee: amount,
       status: "pending",
@@ -49,7 +59,7 @@ export async function POST(req: Request) {
 
     await writeAuditLog({
       entityType: "membership",
-      entityId: membershipId,
+      entityId: tempMembershipId,
       action: "membership.pending_created",
       after: membership.toObject(),
       actorUserId: user.userId,
@@ -59,10 +69,9 @@ export async function POST(req: Request) {
     return ok({
       keyId: process.env.RAZORPAY_KEY_ID ?? "",
       order,
-      membershipId,
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Request failed";
+    const message = typeof error === "string" ? error : (error as any)?.message || "Request failed";
     if (message === "Unauthorized") {
       return fail("Please sign in first.", 401);
     }

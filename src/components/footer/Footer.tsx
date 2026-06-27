@@ -98,17 +98,24 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Copyright */}
-      <div className="bg-[#EECDA3] text-center py-4 text-sm text-[#5A1C16]">
-        © {new Date().getFullYear()} {t("copyright")}{" "}
-        <a
-          href="https://vaddera.org"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline"
-        >
-          vaddera.org
-        </a>
+      {/* Legal Links & Copyright */}
+      <div className="bg-[#EECDA3] py-6 px-4 text-center text-sm text-[#5A1C16]">
+        <div className="flex flex-wrap justify-center gap-6 mb-3 font-medium">
+          <a href="/terms" className="hover:underline">Terms & Conditions</a>
+          <a href="/privacy" className="hover:underline">Privacy Policy</a>
+          <a href="/payment-policy" className="hover:underline">Payment & Refund Policy</a>
+        </div>
+        <p>
+          © {new Date().getFullYear()} {t("copyright")}{" "}
+          <a
+            href="https://vaddera.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            vaddera.org
+          </a>
+        </p>
       </div>
     </footer>
   );

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import DataTable from "@/src/components/admin/DataTable";
+import { HiOutlineCreditCard, HiOutlineShieldCheck, HiOutlineBanknotes, HiOutlineArrowDownTray } from "react-icons/hi2";
 
 interface MembershipData {
   _id: string;
@@ -73,18 +74,18 @@ export default function AdminMembershipsPage() {
       label: "Status",
       render: (value: string) => (
         <span
-          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+          className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${
             value === "active"
-              ? "bg-green-100 text-green-800"
+              ? "bg-[#e8f5e9] text-[#2e7d32] border border-emerald-200"
               : value === "expired"
-                ? "bg-slate-100 text-slate-700"
+                ? "bg-slate-100 text-slate-700 border border-slate-200"
                 : value === "suspended"
-                  ? "bg-red-100 text-red-800"
-                  : "bg-yellow-100 text-yellow-800"
+                  ? "bg-rose-50 text-rose-700 border border-rose-200"
+                  : "bg-[#fff3e5] text-[#d32f2f] border border-amber-200"
           }`}
         >
           {value === "active"
-            ? "Active"
+            ? "✓ Active"
             : value === "expired"
               ? "Expired"
               : value === "suspended"
@@ -112,74 +113,98 @@ export default function AdminMembershipsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 p-6 md:p-10">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-semibold text-slate-900 mb-2">
-          Membership Management
-        </h1>
-        <p className="text-slate-600">
-          Monitor and manage all membership records
-        </p>
+    <main className="min-h-screen bg-[#fbf7f1] p-6 md:p-10">
+      {/* Header Banner */}
+      <div className="mb-8 flex flex-col gap-4 rounded-2xl border border-[#ead9c2] bg-white p-6 shadow-sm md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="mb-1 text-xs font-bold uppercase tracking-wider text-[#0F5F54]">Memberships</p>
+          <h1 className="text-3xl font-bold tracking-tight text-[#36100B]">
+            Membership Records
+          </h1>
+          <p className="mt-1 text-sm text-[#7A6258]">
+            Monitor active memberships, status activations, and fee collections.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => handleExport("csv")}
+            disabled={isLoading}
+            className="flex items-center gap-1.5 px-4 py-2.5 bg-[#6A160A] hover:bg-[#521006] text-white font-bold text-xs rounded-xl transition shadow-sm disabled:opacity-50"
+          >
+            <HiOutlineArrowDownTray className="h-4 w-4" /> Export CSV
+          </button>
+          <button
+            onClick={() => handleExport("xlsx")}
+            disabled={isLoading}
+            className="flex items-center gap-1.5 px-4 py-2.5 bg-[#0F5F54] hover:bg-[#0D4A42] text-white font-bold text-xs rounded-xl transition shadow-sm disabled:opacity-50"
+          >
+            <HiOutlineArrowDownTray className="h-4 w-4" /> Export Excel
+          </button>
+        </div>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
-          <p className="text-sm text-slate-500 mb-1">Total Memberships</p>
-          <p className="text-3xl font-semibold text-slate-900">{stats.total}</p>
+        <div className="rounded-2xl border border-[#ead9c2] bg-white p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#7A6258]">Total Records</p>
+            <p className="text-3xl font-black text-[#36100B] mt-1">{stats.total}</p>
+          </div>
+          <div className="h-12 w-12 rounded-2xl bg-[#fff3e5] flex items-center justify-center text-[#6A160A] text-2xl">
+            <HiOutlineCreditCard />
+          </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
-          <p className="text-sm text-slate-500 mb-1">Active</p>
-          <p className="text-3xl font-semibold text-slate-900">{stats.active}</p>
+
+        <div className="rounded-2xl border border-[#ead9c2] bg-white p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#7A6258]">Active Members</p>
+            <p className="text-3xl font-black text-[#0F5F54] mt-1">{stats.active}</p>
+          </div>
+          <div className="h-12 w-12 rounded-2xl bg-[#e8f5e9] flex items-center justify-center text-[#0F5F54] text-2xl">
+            <HiOutlineShieldCheck />
+          </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
-          <p className="text-sm text-slate-500 mb-1">Inactive</p>
-          <p className="text-3xl font-semibold text-slate-900">{stats.inactive}</p>
+
+        <div className="rounded-2xl border border-[#ead9c2] bg-white p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#7A6258]">Inactive / Pending</p>
+            <p className="text-3xl font-black text-[#d32f2f] mt-1">{stats.inactive}</p>
+          </div>
+          <div className="h-12 w-12 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-600 text-2xl">
+            <HiOutlineCreditCard />
+          </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
-          <p className="text-sm text-slate-500 mb-1">Revenue Collected</p>
-          <p className="text-3xl font-semibold text-slate-900">
-            ₹{stats.revenue.toLocaleString()}
-          </p>
+
+        <div className="rounded-2xl border border-[#ead9c2] bg-white p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#7A6258]">Fees Revenue</p>
+            <p className="text-3xl font-black text-[#6A160A] mt-1">₹{stats.revenue.toLocaleString()}</p>
+          </div>
+          <div className="h-12 w-12 rounded-2xl bg-[#fff3e5] flex items-center justify-center text-[#6A160A] text-2xl">
+            <HiOutlineBanknotes />
+          </div>
         </div>
       </div>
 
-      {/* Filter and Export */}
-      <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-200 mb-6 flex flex-col md:flex-row gap-4 items-end">
-        <div className="flex-1">
-          <label className="block text-sm font-medium text-slate-600 mb-2">
-            Filter by Status
+      {/* Filter Bar */}
+      <div className="rounded-2xl border border-[#ead9c2] bg-[#fffdf7] p-5 shadow-sm mb-6 flex flex-col sm:flex-row gap-4 items-center justify-between">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <label className="text-xs font-bold uppercase tracking-wider text-[#5A1C16] shrink-0">
+            Filter Status:
           </label>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
             disabled={isLoading}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 disabled:bg-slate-100"
+            className="w-full sm:w-64 px-3 py-2 border border-[#dcc9a8] rounded-xl text-xs font-bold text-[#36100B] focus:outline-none focus:ring-2 focus:ring-[#0F5F54] bg-white"
           >
-            <option value="all">All Memberships</option>
-            <option value="active">Active</option>
+            <option value="all">All Statuses</option>
+            <option value="active">Active Members</option>
             <option value="pending">Pending</option>
             <option value="expired">Expired</option>
             <option value="suspended">Suspended</option>
           </select>
-        </div>
-
-        <div className="flex gap-2">
-          <button
-            onClick={() => handleExport("csv")}
-            disabled={isLoading}
-            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg transition disabled:opacity-50"
-          >
-            Export CSV
-          </button>
-          <button
-            onClick={() => handleExport("xlsx")}
-            disabled={isLoading}
-            className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition disabled:opacity-50"
-          >
-            Export Excel
-          </button>
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
 
 export interface FilterState {
   search: string;
@@ -37,13 +37,29 @@ export default function FilterPanel({
     village: "",
   });
 
+  const [searchInput, setSearchInput] = useState("");
+  const filtersRef = useRef(filters);
+  filtersRef.current = filters;
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const handleSearchChange = (value: string) => {
+    setSearchInput(value);
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+
+    debounceTimer.current = setTimeout(() => {
+      const newFilters = { ...filtersRef.current, search: value };
+      setFilters(newFilters);
+      onFilterChange(newFilters);
+    }, 300);
+  };
+
   const handleChange = useCallback(
     (field: keyof FilterState, value: string) => {
-      const newFilters = { ...filters, [field]: value };
+      const newFilters = { ...filtersRef.current, [field]: value };
       setFilters(newFilters);
       onFilterChange(newFilters);
     },
-    [filters, onFilterChange],
+    [onFilterChange],
   );
 
   const handleReset = useCallback(() => {
@@ -55,6 +71,8 @@ export default function FilterPanel({
       mandal: "",
       village: "",
     };
+    setSearchInput("");
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
     setFilters(resetFilters);
     onFilterChange(resetFilters);
   }, [onFilterChange]);
@@ -71,11 +89,10 @@ export default function FilterPanel({
           </label>
           <input
             type="text"
-            placeholder="Name, User ID, Mobile"
-            value={filters.search}
-            onChange={(e) => handleChange("search", e.target.value)}
-            disabled={isLoading}
-            className="w-full px-3 py-2 border border-[#dcc9a8] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0F5F54] disabled:bg-[#f5e6cf] text-[#2B0904]"
+            placeholder="Name, User ID, Mobile, Email, Location"
+            value={searchInput}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            className="w-full px-3 py-2 border border-[#dcc9a8] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0F5F54] text-[#2B0904]"
           />
         </div>
 

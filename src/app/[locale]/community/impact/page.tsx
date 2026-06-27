@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import TransparencyStats from "@/src/components/community/TransparencyStats";
 import Link from "next/link";
+import { HiOutlineChartBar, HiOutlineLockClosed } from "react-icons/hi2";
 
 interface Stats {
   totalMembers: number;
@@ -41,44 +42,32 @@ export default function CommunityImpactPage() {
     }
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#f5e6cf] to-[#fffdf7] py-12 px-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-12">
-          <Link
-            href="/"
-            className="text-[#0F5F54] hover:text-[#0D4A42] transition mb-4 inline-block"
-          >
-            ← Back
-          </Link>
-          <h1 className="text-4xl md:text-5xl font-bold text-[#5A1C16] mb-4">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#fff8ef,_#fdeed8_35%,_#f4d8b0_100%)] px-4 py-8 md:px-8 md:py-12">
+      <section className="mx-auto max-w-6xl">
+        {/* Top Hero Card aligned with VRPS app theme */}
+        <div className="mb-8 rounded-2xl border border-[#e4c69d] bg-white/85 p-6 shadow-[0_20px_40px_-24px_rgba(90,28,22,0.45)] backdrop-blur md:p-8">
+          <p className="mb-2 inline-block rounded-full bg-[#6A160A] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white">
+            Transparency & Impact
+          </p>
+          <h1 className="text-3xl font-black leading-tight text-[#3d120d] md:text-4xl">
             Community Impact & Transparency
           </h1>
-          <p className="text-lg text-[#8B6F47] max-w-2xl">
-            Our commitment to transparency and accountability. See the real
-            impact of our community's collective efforts toward strengthening
-            the Vaddera community.
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-[#5a3a2e] md:text-base">
+            Our commitment to total accountability. Explore real-time metrics demonstrating how collective participation creates meaningful opportunities.
           </p>
         </div>
 
-        {/* Content */}
+        {/* Stats & Details Container */}
         {isLoading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#0F5F54] mb-4"></div>
-            <p className="text-[#8B6F47]">Loading community data...</p>
+          <div className="flex flex-col items-center justify-center py-16 rounded-2xl border border-[#e4c69d] bg-white p-8 shadow-sm">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#0F5F54] border-t-transparent mb-3" />
+            <p className="text-sm font-bold text-[#0F5F54]">Loading real-time statistics...</p>
           </div>
         ) : error ? (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-            <p className="text-red-600">{error}</p>
+          <div className="rounded-2xl border border-red-200 bg-white p-8 text-center shadow-sm">
+            <p className="text-base font-bold text-red-600">⚠️ Unable to Load Metrics</p>
+            <p className="mt-1 text-xs text-gray-600">{error}</p>
           </div>
         ) : stats ? (
           <>
@@ -90,73 +79,71 @@ export default function CommunityImpactPage() {
               monthlyDonationAmount={stats.monthlyDonationAmount}
             />
 
-            {/* Additional Info */}
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Join Community */}
-              <div className="bg-white rounded-xl p-8 border border-[#e8d4b8]">
-                <h3 className="text-2xl font-bold text-[#5A1C16] mb-4">
-                  Join Our Community
+            {/* Action Cards Grid */}
+            <div className="mt-12 grid gap-6 md:grid-cols-2">
+              {/* Join Community Card */}
+              <div className="rounded-2xl border border-[#e4c69d] bg-white p-6 shadow-sm">
+                <h3 className="text-xl font-bold text-[#3d120d] mb-2">
+                  Become an Active Member
                 </h3>
-                <p className="text-[#8B6F47] mb-6">
-                  Become a member and be part of our growing Vaddera community.
-                  Your participation helps strengthen our collective efforts.
+                <p className="text-sm text-[#6a4a3b] leading-relaxed mb-5">
+                  Join hundreds of community members working together for empowerment, leadership, and shared growth. Receive your verified digital Member ID card.
                 </p>
                 <Link
                   href="/membership"
-                  className="inline-block px-6 py-3 bg-[#0F5F54] hover:bg-[#0D4A42] text-white font-semibold rounded-lg transition"
+                  className="inline-block rounded-lg bg-[#6A160A] px-5 py-2.5 text-xs font-bold text-white transition hover:bg-[#561007]"
                 >
-                  Become a Member
+                  Join Community Now →
                 </Link>
               </div>
 
-              {/* Support Mission */}
-              <div className="bg-[#ffe6bf] rounded-xl p-8 border border-[#e8d4b8]">
-                <h3 className="text-2xl font-bold text-[#5A1C16] mb-4">
-                  Support Our Mission
+              {/* Support Mission Card */}
+              <div className="rounded-2xl border border-[#e4c69d] bg-white p-6 shadow-sm">
+                <h3 className="text-xl font-bold text-[#3d120d] mb-2">
+                  Support Our Welfare Mission
                 </h3>
-                <p className="text-[#8B6F47] mb-6">
-                  Your donation, no matter the amount, makes a real difference.
-                  Support causes that matter to our community.
+                <p className="text-sm text-[#6a4a3b] leading-relaxed mb-5">
+                  Your contributions directly fund student educational scholarships, community centers, and youth skill-building initiatives across regions.
                 </p>
                 <Link
                   href="/donations"
-                  className="inline-block px-6 py-3 bg-[#0F5F54] hover:bg-[#0D4A42] text-white font-semibold rounded-lg transition"
+                  className="inline-block rounded-lg bg-[#0F5F54] px-5 py-2.5 text-xs font-bold text-white transition hover:bg-[#0D4A42]"
                 >
-                  Make a Donation
+                  Make a Contribution →
                 </Link>
               </div>
             </div>
 
-            {/* Privacy Notice */}
-            <div className="mt-12 bg-[#f5e6cf] rounded-xl p-8 border border-[#e8d4b8]">
-              <h3 className="text-xl font-bold text-[#5A1C16] mb-4">
-                🔒 Your Privacy Matters
-              </h3>
-              <div className="space-y-3 text-[#2B0904]">
-                <p>
-                  ✓ All information displayed here is{" "}
-                  <strong>opt-in only</strong>
-                </p>
-                <p>
-                  ✓ You can choose to remain <strong>completely private</strong>
-                </p>
-                <p>
-                  ✓ You can contribute as <strong>anonymous</strong> while still
-                  supporting our mission
-                </p>
-                <p>
-                  ✓ You have full control over your{" "}
-                  <strong>public visibility settings</strong>
-                </p>
-                <p>
-                  ✓ Personal information like email, phone, and government IDs
-                  are <strong>never displayed</strong>
-                </p>
+            {/* Privacy Guarantee Notice */}
+            <div className="mt-8 rounded-2xl border border-[#eddcc8] bg-[#fffaf4] p-6 text-sm text-[#5a3a2e]">
+              <div className="flex items-center gap-2 mb-3">
+                <HiOutlineLockClosed className="h-5 w-5 text-[#0F5F54]" />
+                <h3 className="font-bold text-[#3d120d]">
+                  Your Privacy & Data Protection Guarantee
+                </h3>
+              </div>
+              <div className="grid gap-2.5 text-xs md:text-sm text-[#6a4a3b] md:grid-cols-2">
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-[#0F5F54]">✓</span>
+                  <span>Public listing is <strong>100% opt-in</strong> and user-controlled.</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-[#0F5F54]">✓</span>
+                  <span>Option to remain <strong>completely private</strong> or <strong>anonymous</strong>.</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-[#0F5F54]">✓</span>
+                  <span>Modify your public display preferences at any time.</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-[#0F5F54]">✓</span>
+                  <span>Sensitive details (email, phone, address) are <strong>never exposed</strong>.</span>
+                </div>
               </div>
             </div>
           </>
         ) : null}
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

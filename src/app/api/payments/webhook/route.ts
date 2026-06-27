@@ -5,6 +5,7 @@ import Membership from "@/src/models/Membership";
 import Donation from "@/src/models/Donation";
 import User from "@/src/models/User";
 import { writeAuditLog } from "@/src/lib/audit";
+import { generateMembershipId } from "@/src/lib/ids";
 
 type RazorpayEvent = {
   event: string;
@@ -14,10 +15,15 @@ type RazorpayEvent = {
   };
 };
 
-async function activateMembershipByOrderId(orderId: string, paymentId: string) {
+export async function activateMembershipByOrderId(orderId: string, paymentId: string) {
   const membership = await Membership.findOne({ paymentId: orderId });
   if (!membership) return;
   const before = membership.toObject();
+
+  // Only generate official Member ID on successful payment!
+  if (!membership.membershipId || membership.membershipId.startsWith("PENDING")) {
+    membership.membershipId = await generateMembershipId();
+  }
 
   membership.status = "active";
   membership.startDate = new Date();
@@ -121,4 +127,3 @@ export async function POST(req: Request) {
     return fail(error, 500);
   }
 }
-

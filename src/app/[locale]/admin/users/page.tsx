@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import FilterPanel, { FilterState } from "@/src/components/admin/FilterPanel";
 import DataTable from "@/src/components/admin/DataTable";
+import { HiOutlineUserGroup, HiOutlineShieldCheck, HiOutlineUserMinus, HiOutlineArrowDownTray } from "react-icons/hi2";
 
 interface UserData {
   _id: string;
@@ -53,7 +54,6 @@ export default function AdminUsersPage() {
       const body = await res.json();
       if (body.success) {
         setUsers(body.data);
-        // Extract unique locations
         const allAddresses = body.data
           .map((u: UserData) => u.address)
           .filter(Boolean);
@@ -120,7 +120,7 @@ export default function AdminUsersPage() {
   };
 
   const columns = [
-    { key: "userId" as const, label: "User ID", width: "120px" },
+    { key: "userId" as const, label: "User ID", width: "130px" },
     { key: "name" as const, label: "Name" },
     {
       key: "mobile" as const,
@@ -132,9 +132,11 @@ export default function AdminUsersPage() {
       label: "Status",
       render: (value: boolean) => (
         <span
-          className={`px-3 py-1 rounded-full text-xs font-semibold ${value ? "bg-green-100 text-green-800" : "bg-orange-100 text-orange-800"}`}
+          className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${
+            value ? "bg-[#e8f5e9] text-[#2e7d32] border border-emerald-200" : "bg-[#fff3e5] text-[#d32f2f] border border-amber-200"
+          }`}
         >
-          {value ? "✓ Member" : "○ Non-Member"}
+          {value ? "✓ Active Member" : "○ Registered User"}
         </span>
       ),
     },
@@ -155,34 +157,67 @@ export default function AdminUsersPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 p-6 md:p-10">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-semibold text-slate-900 mb-2">
-          User Management
-        </h1>
-        <p className="text-slate-600">
-          View and manage all registered users with advanced filtering
-        </p>
+    <main className="min-h-screen bg-[#fbf7f1] p-6 md:p-10">
+      {/* Header Banner */}
+      <div className="mb-8 flex flex-col gap-4 rounded-2xl border border-[#ead9c2] bg-white p-6 shadow-sm md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="mb-1 text-xs font-bold uppercase tracking-wider text-[#0F5F54]">Directory</p>
+          <h1 className="text-3xl font-bold tracking-tight text-[#36100B]">
+            User Directory Management
+          </h1>
+          <p className="mt-1 text-sm text-[#7A6258]">
+            Search, filter, and export registered community users and membership records.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => handleExport("csv")}
+            disabled={isLoading}
+            className="flex items-center gap-1.5 px-4 py-2.5 bg-[#6A160A] hover:bg-[#521006] text-white font-bold text-xs rounded-xl transition shadow-sm disabled:opacity-50"
+          >
+            <HiOutlineArrowDownTray className="h-4 w-4" /> Export CSV
+          </button>
+          <button
+            onClick={() => handleExport("xlsx")}
+            disabled={isLoading}
+            className="flex items-center gap-1.5 px-4 py-2.5 bg-[#0F5F54] hover:bg-[#0D4A42] text-white font-bold text-xs rounded-xl transition shadow-sm disabled:opacity-50"
+          >
+            <HiOutlineArrowDownTray className="h-4 w-4" /> Export Excel
+          </button>
+        </div>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
-          <p className="text-sm text-slate-500 mb-1">Total Users</p>
-          <p className="text-3xl font-semibold text-slate-900">{stats.total}</p>
+        <div className="rounded-2xl border border-[#ead9c2] bg-white p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#7A6258]">Total Registered</p>
+            <p className="text-3xl font-black text-[#36100B] mt-1">{stats.total}</p>
+          </div>
+          <div className="h-12 w-12 rounded-2xl bg-[#fff3e5] flex items-center justify-center text-[#6A160A] text-2xl">
+            <HiOutlineUserGroup />
+          </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
-          <p className="text-sm text-slate-500 mb-1">Active Members</p>
-          <p className="text-3xl font-semibold text-slate-900">
-            {stats.members}
-          </p>
+
+        <div className="rounded-2xl border border-[#ead9c2] bg-white p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#7A6258]">Active Members</p>
+            <p className="text-3xl font-black text-[#0F5F54] mt-1">{stats.members}</p>
+          </div>
+          <div className="h-12 w-12 rounded-2xl bg-[#e8f5e9] flex items-center justify-center text-[#0F5F54] text-2xl">
+            <HiOutlineShieldCheck />
+          </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
-          <p className="text-sm text-slate-500 mb-1">Non-Members</p>
-          <p className="text-3xl font-semibold text-slate-900">
-            {stats.nonMembers}
-          </p>
+
+        <div className="rounded-2xl border border-[#ead9c2] bg-white p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#7A6258]">Registered Non-Members</p>
+            <p className="text-3xl font-black text-[#d32f2f] mt-1">{stats.nonMembers}</p>
+          </div>
+          <div className="h-12 w-12 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-600 text-2xl">
+            <HiOutlineUserMinus />
+          </div>
         </div>
       </div>
 
@@ -195,24 +230,6 @@ export default function AdminUsersPage() {
         villages={locations.villages}
         isLoading={isLoading}
       />
-
-      {/* Export Buttons */}
-      <div className="flex gap-2 mb-6">
-        <button
-          onClick={() => handleExport("csv")}
-          disabled={isLoading}
-          className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg transition disabled:opacity-50"
-        >
-          Export CSV
-        </button>
-        <button
-          onClick={() => handleExport("xlsx")}
-          disabled={isLoading}
-          className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition disabled:opacity-50"
-        >
-          Export Excel
-        </button>
-      </div>
 
       {/* Data Table */}
       <DataTable<UserData>

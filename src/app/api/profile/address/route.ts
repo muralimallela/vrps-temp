@@ -35,6 +35,10 @@ export async function PUT(req: Request) {
       { upsert: true, new: true }
     );
 
+    if (!address) {
+      return fail("Failed to create or update address", 500);
+    }
+
     user.addressId = address._id;
     await user.save();
 

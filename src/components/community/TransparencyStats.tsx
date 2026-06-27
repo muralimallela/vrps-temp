@@ -52,64 +52,84 @@ export default function TransparencyStats({
       value: totalMembers,
       isNumber: true,
       icon: "👥",
-      color: "from-[#e8f5e9] to-[#c8e6c9]",
-      textColor: "[#0F5F54]",
-      description: "Growing stronger",
+      gradient: "from-[#e8f5e9] via-[#f1f8e9] to-white",
+      borderColor: "border-emerald-200",
+      textColor: "text-[#0F5F54]",
+      description: "Verified active community",
     },
     {
       label: "Active Supporters",
       value: totalSupporters,
       isNumber: true,
       icon: "❤️",
-      color: "from-[#fce4ec] to-[#f8bbd0]",
-      textColor: "[#d32f2f]",
-      description: "Making impact",
+      gradient: "from-[#fce4ec] via-[#fff0f5] to-white",
+      borderColor: "border-rose-200",
+      textColor: "text-[#d32f2f]",
+      description: "Generous contributors",
     },
     {
       label: "Community Fund",
       value: formatCurrency(totalDonationAmount),
       isNumber: false,
       icon: "🤝",
-      color: "from-[#fff3e0] to-[#ffe0b2]",
-      textColor: "[#e65100]",
-      description: "Pooled strength",
+      gradient: "from-[#fff3e0] via-[#fff8e7] to-white",
+      borderColor: "border-amber-200",
+      textColor: "text-[#6A160A]",
+      description: "Pooled empowerment fund",
     },
     {
       label: "New Joiners",
       value: newMembersThisMonth,
       isNumber: true,
       icon: "🌱",
-      color: "from-[#f3e5f5] to-[#e1bee7]",
-      textColor: "[#7b1fa2]",
-      description: "This month",
+      gradient: "from-[#f3e5f5] via-[#fbf5fc] to-white",
+      borderColor: "border-purple-200",
+      textColor: "text-[#7b1fa2]",
+      description: "Joined this month",
     },
   ];
 
   return (
     <div className="w-full">
-      <h2 className="text-3xl md:text-4xl font-bold text-[#5A1C16] mb-2">
-        Our Community Impact
-      </h2>
-      <p className="text-[#8B6F47] mb-8">Real numbers, real impact, real people</p>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+      <div className="mb-8 text-center md:text-left">
+        <h2 className="text-3xl font-black text-[#3d120d] md:text-4xl">
+          Live Community Metrics
+        </h2>
+        <p className="mt-2 text-sm text-[#6a4a3b] md:text-base">
+          Real numbers reflecting collective participation, transparency, and ongoing progress.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat, idx) => (
           <div
             key={idx}
-            className={`bg-gradient-to-br ${stat.color} rounded-2xl p-6 md:p-8 border border-[#e8d4b8]/30 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1`}
+            className={`group relative overflow-hidden rounded-3xl border ${stat.borderColor} bg-gradient-to-br ${stat.gradient} p-6 shadow-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl`}
           >
-            <div className="text-5xl mb-4">{stat.icon}</div>
-            <p className="text-[#8B6F47] text-xs md:text-sm font-semibold uppercase tracking-wider mb-3">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm text-2xl group-hover:scale-110 transition-transform">
+                {stat.icon}
+              </div>
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#8a5b3a]">
+                Live Verified
+              </span>
+            </div>
+
+            <p className="text-xs font-bold uppercase tracking-wider text-[#6a4a3b] mb-1">
               {stat.label}
             </p>
-            <p className={`text-3xl md:text-4xl font-black text-${stat.textColor} mb-2`}>
+
+            <p className={`text-3xl md:text-4xl font-black ${stat.textColor} tracking-tight mb-2`}>
               {stat.isNumber ? (
                 <StatCounter target={stat.value as number} />
               ) : (
                 stat.value
               )}
             </p>
-            <p className="text-xs md:text-sm text-[#666] italic">{stat.description}</p>
+
+            <p className="text-xs text-[#7a5b4c] font-medium border-t border-black/5 pt-2 mt-2">
+              {stat.description}
+            </p>
           </div>
         ))}
       </div>

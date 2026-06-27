@@ -9,5 +9,5 @@ export async function getNextSequence(name: string) {
         { new: true, upsert: true } // create if doesn't exist
     );
 
-    return counter.value;
+    return counter ? counter.value : 1;
 }
