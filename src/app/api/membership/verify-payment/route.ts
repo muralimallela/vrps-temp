@@ -1,7 +1,7 @@
 import { connectDB } from "@/src/lib/mongodb";
 import { requireUser } from "@/src/lib/auth";
 import { fail, ok } from "@/src/lib/http";
-import { activateMembershipByOrderId } from "@/src/app/api/payments/webhook/route";
+import { activateMembershipByOrderId } from "@/src/lib/membershipActivation";
 
 export async function POST(req: Request) {
   try {
