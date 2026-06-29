@@ -35,14 +35,21 @@ export async function PUT(request: NextRequest) {
 
     await connectDB();
 
+    const computedShowMembership =
+      showMembershipPublically !== undefined
+        ? showMembershipPublically
+        : publicVisibility
+        ? publicVisibility !== "private"
+        : undefined;
+
     // Find user by Clerk ID
     const user = await User.findOneAndUpdate(
       { clerkUserId },
       {
         ...(publicVisibility && { publicVisibility }),
         ...(publicDisplayName !== undefined && { publicDisplayName }),
-        ...(showMembershipPublically !== undefined && {
-          showMembershipPublically,
+        ...(computedShowMembership !== undefined && {
+          showMembershipPublically: computedShowMembership,
         }),
         ...(showDonationPublicly !== undefined && { showDonationPublicly }),
       },

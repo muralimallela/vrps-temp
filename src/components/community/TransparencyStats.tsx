@@ -1,6 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import {
+  HiOutlineUserGroup,
+  HiOutlineHeart,
+  HiOutlineBanknotes,
+  HiOutlineUserPlus,
+} from "react-icons/hi2";
 
 interface TransparencyStatsProps {
   totalMembers: number;
@@ -51,7 +57,7 @@ export default function TransparencyStats({
       label: "Community Members",
       value: totalMembers,
       isNumber: true,
-      icon: "👥",
+      icon: HiOutlineUserGroup,
       gradient: "from-[#e8f5e9] via-[#f1f8e9] to-white",
       borderColor: "border-emerald-200",
       textColor: "text-[#0F5F54]",
@@ -61,7 +67,7 @@ export default function TransparencyStats({
       label: "Active Supporters",
       value: totalSupporters,
       isNumber: true,
-      icon: "❤️",
+      icon: HiOutlineHeart,
       gradient: "from-[#fce4ec] via-[#fff0f5] to-white",
       borderColor: "border-rose-200",
       textColor: "text-[#d32f2f]",
@@ -71,7 +77,7 @@ export default function TransparencyStats({
       label: "Community Fund",
       value: formatCurrency(totalDonationAmount),
       isNumber: false,
-      icon: "🤝",
+      icon: HiOutlineBanknotes,
       gradient: "from-[#fff3e0] via-[#fff8e7] to-white",
       borderColor: "border-amber-200",
       textColor: "text-[#6A160A]",
@@ -81,7 +87,7 @@ export default function TransparencyStats({
       label: "New Joiners",
       value: newMembersThisMonth,
       isNumber: true,
-      icon: "🌱",
+      icon: HiOutlineUserPlus,
       gradient: "from-[#f3e5f5] via-[#fbf5fc] to-white",
       borderColor: "border-purple-200",
       textColor: "text-[#7b1fa2]",
@@ -101,37 +107,40 @@ export default function TransparencyStats({
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat, idx) => (
-          <div
-            key={idx}
-            className={`group relative overflow-hidden rounded-3xl border ${stat.borderColor} bg-gradient-to-br ${stat.gradient} p-6 shadow-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl`}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm text-2xl group-hover:scale-110 transition-transform">
-                {stat.icon}
+        {stats.map((stat, idx) => {
+          const Icon = stat.icon;
+          return (
+            <div
+              key={idx}
+              className={`group relative overflow-hidden rounded-3xl border ${stat.borderColor} bg-gradient-to-br ${stat.gradient} p-6 shadow-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl`}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm group-hover:scale-110 transition-transform">
+                  <Icon className={`h-6 w-6 ${stat.textColor}`} />
+                </div>
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#8a5b3a]">
+                  Live Verified
+                </span>
               </div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#8a5b3a]">
-                Live Verified
-              </span>
+
+              <p className="text-xs font-bold uppercase tracking-wider text-[#6a4a3b] mb-1">
+                {stat.label}
+              </p>
+
+              <p className={`text-3xl md:text-4xl font-black ${stat.textColor} tracking-tight mb-2`}>
+                {stat.isNumber ? (
+                  <StatCounter target={stat.value as number} />
+                ) : (
+                  stat.value
+                )}
+              </p>
+
+              <p className="text-xs text-[#7a5b4c] font-medium border-t border-black/5 pt-2 mt-2">
+                {stat.description}
+              </p>
             </div>
-
-            <p className="text-xs font-bold uppercase tracking-wider text-[#6a4a3b] mb-1">
-              {stat.label}
-            </p>
-
-            <p className={`text-3xl md:text-4xl font-black ${stat.textColor} tracking-tight mb-2`}>
-              {stat.isNumber ? (
-                <StatCounter target={stat.value as number} />
-              ) : (
-                stat.value
-              )}
-            </p>
-
-            <p className="text-xs text-[#7a5b4c] font-medium border-t border-black/5 pt-2 mt-2">
-              {stat.description}
-            </p>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

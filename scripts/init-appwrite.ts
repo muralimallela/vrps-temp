@@ -20,12 +20,13 @@ try {
   });
 }
 
-import { Client, Databases } from "node-appwrite";
+import { Client, Databases, Storage, Permission, Role } from "node-appwrite";
 
 const endpoint = process.env.APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1";
 const projectId = process.env.APPWRITE_PROJECT_ID || "";
 const apiKey = process.env.APPWRITE_API_KEY || "";
 const databaseId = process.env.APPWRITE_DATABASE_ID || "vrps_db";
+const bucketId = process.env.APPWRITE_STORAGE_BUCKET_ID || "news_media";
 
 if (!projectId || !apiKey) {
   console.error("❌ APPWRITE_PROJECT_ID and APPWRITE_API_KEY environment variables are required.");
@@ -33,6 +34,7 @@ if (!projectId || !apiKey) {
 
 const client = new Client().setEndpoint(endpoint).setProject(projectId).setKey(apiKey);
 const databases = new Databases(client);
+const storage = new Storage(client);
 
 const COLLECTIONS = {
   USERS: "users",
@@ -41,6 +43,8 @@ const COLLECTIONS = {
   COUNTERS: "counters",
   DONATIONS: "donations",
   MEMBERSHIPS: "memberships",
+  NEWS_ITEMS: "news_items",
+  COMMITTEE_MEMBERS: "committee_members",
 } as const;
 
 async function sleep(ms: number) {
@@ -127,7 +131,7 @@ async function setupSchema() {
   console.log("\n🚀 Initializing Appwrite MariaDB database schema...");
   await ensureDatabase();
 
-  const RESET_COLLECTIONS = true; // Re-provision collections with optimized row sizes
+  const RESET_COLLECTIONS = process.env.RESET_DB === "true"; // Safe non-destructive schema initialization
 
   // 1. Users Schema
   console.log("\n📋 Provisioning Users collection...");
@@ -202,6 +206,65 @@ async function setupSchema() {
   await ensureAttribute(COLLECTIONS.MEMBERSHIPS, "status", () => databases.createStringAttribute(databaseId, COLLECTIONS.MEMBERSHIPS, "status", 32, false, "pending"));
   await ensureAttribute(COLLECTIONS.MEMBERSHIPS, "paymentId", () => databases.createStringAttribute(databaseId, COLLECTIONS.MEMBERSHIPS, "paymentId", 128, false, ""));
 
+  // 7. News Items Schema
+  console.log("\n📋 Provisioning News Items collection...");
+  await prepareCollection(COLLECTIONS.NEWS_ITEMS, "NewsItems", RESET_COLLECTIONS);
+  await ensureAttribute(COLLECTIONS.NEWS_ITEMS, "newsId", () => databases.createStringAttribute(databaseId, COLLECTIONS.NEWS_ITEMS, "newsId", 128, true));
+  await ensureAttribute(COLLECTIONS.NEWS_ITEMS, "title", () => databases.createStringAttribute(databaseId, COLLECTIONS.NEWS_ITEMS, "title", 256, true));
+  await ensureAttribute(COLLECTIONS.NEWS_ITEMS, "category", () => databases.createStringAttribute(databaseId, COLLECTIONS.NEWS_ITEMS, "category", 64, true));
+  await ensureAttribute(COLLECTIONS.NEWS_ITEMS, "date", () => databases.createStringAttribute(databaseId, COLLECTIONS.NEWS_ITEMS, "date", 64, true));
+  await ensureAttribute(COLLECTIONS.NEWS_ITEMS, "src", () => databases.createStringAttribute(databaseId, COLLECTIONS.NEWS_ITEMS, "src", 512, true));
+  await ensureAttribute(COLLECTIONS.NEWS_ITEMS, "fileId", () => databases.createStringAttribute(databaseId, COLLECTIONS.NEWS_ITEMS, "fileId", 128, false, ""));
+  await ensureAttribute(COLLECTIONS.NEWS_ITEMS, "createdAt", () => databases.createDatetimeAttribute(databaseId, COLLECTIONS.NEWS_ITEMS, "createdAt", false));
+  await ensureAttribute(COLLECTIONS.NEWS_ITEMS, "updatedAt", () => databases.createDatetimeAttribute(databaseId, COLLECTIONS.NEWS_ITEMS, "updatedAt", false));
+
+  // 8. Committee Members Schema
+  console.log("\n📋 Provisioning Committee Members collection...");
+  await prepareCollection(COLLECTIONS.COMMITTEE_MEMBERS, "CommitteeMembers", RESET_COLLECTIONS);
+  await ensureAttribute(COLLECTIONS.COMMITTEE_MEMBERS, "memberId", () => databases.createStringAttribute(databaseId, COLLECTIONS.COMMITTEE_MEMBERS, "memberId", 128, true));
+  await ensureAttribute(COLLECTIONS.COMMITTEE_MEMBERS, "name", () => databases.createStringAttribute(databaseId, COLLECTIONS.COMMITTEE_MEMBERS, "name", 128, true));
+  await ensureAttribute(COLLECTIONS.COMMITTEE_MEMBERS, "designation", () => databases.createStringAttribute(databaseId, COLLECTIONS.COMMITTEE_MEMBERS, "designation", 128, true));
+  await ensureAttribute(COLLECTIONS.COMMITTEE_MEMBERS, "role", () => databases.createStringAttribute(databaseId, COLLECTIONS.COMMITTEE_MEMBERS, "role", 128, true));
+  await ensureAttribute(COLLECTIONS.COMMITTEE_MEMBERS, "image", () => databases.createStringAttribute(databaseId, COLLECTIONS.COMMITTEE_MEMBERS, "image", 512, true));
+  await ensureAttribute(COLLECTIONS.COMMITTEE_MEMBERS, "fileId", () => databases.createStringAttribute(databaseId, COLLECTIONS.COMMITTEE_MEMBERS, "fileId", 128, false, ""));
+  await ensureAttribute(COLLECTIONS.COMMITTEE_MEMBERS, "order", () => databases.createIntegerAttribute(databaseId, COLLECTIONS.COMMITTEE_MEMBERS, "order", true));
+  await ensureAttribute(COLLECTIONS.COMMITTEE_MEMBERS, "createdAt", () => databases.createDatetimeAttribute(databaseId, COLLECTIONS.COMMITTEE_MEMBERS, "createdAt", false));
+  await ensureAttribute(COLLECTIONS.COMMITTEE_MEMBERS, "updatedAt", () => databases.createDatetimeAttribute(databaseId, COLLECTIONS.COMMITTEE_MEMBERS, "updatedAt", false));
+
+  // Storage bucket provisioning
+  console.log("\n📁 Provisioning Appwrite Storage bucket for News Media...");
+  try {
+    await storage.getBucket(bucketId);
+    console.log(`  └─ Bucket '${bucketId}' exists.`);
+  } catch (err: any) {
+    if (err?.code === 404) {
+      console.log(`  └─ Creating Storage Bucket '${bucketId}'...`);
+      try {
+        await storage.createBucket(bucketId, "News Media", [Permission.read(Role.any())], false, true);
+        console.log(`  └─ Bucket '${bucketId}' created.`);
+      } catch (e: any) {
+        console.warn(`  ⚠️ Warning creating bucket: ${e.message}`);
+      }
+    }
+  }
+
+  const committeeBucketId = process.env.APPWRITE_COMMITTEE_BUCKET_ID || "committee_media";
+  console.log("\n📁 Provisioning Appwrite Storage bucket for Committee Media...");
+  try {
+    await storage.getBucket(committeeBucketId);
+    console.log(`  └─ Bucket '${committeeBucketId}' exists.`);
+  } catch (err: any) {
+    if (err?.code === 404) {
+      console.log(`  └─ Creating Storage Bucket '${committeeBucketId}'...`);
+      try {
+        await storage.createBucket(committeeBucketId, "Committee Media", [Permission.read(Role.any())], false, true);
+        console.log(`  └─ Bucket '${committeeBucketId}' created.`);
+      } catch (e: any) {
+        console.warn(`  ⚠️ Warning creating bucket: ${e.message}`);
+      }
+    }
+  }
+
   console.log("\n⏳ Waiting for Appwrite indexes and attributes initialization...");
   await sleep(4000);
 
@@ -212,6 +275,8 @@ async function setupSchema() {
   await ensureIndex(COLLECTIONS.COUNTERS, "idx_counter_name", "unique", ["name"]);
   await ensureIndex(COLLECTIONS.DONATIONS, "idx_donationId", "unique", ["donationId"]);
   await ensureIndex(COLLECTIONS.MEMBERSHIPS, "idx_membershipId", "unique", ["membershipId"]);
+  await ensureIndex(COLLECTIONS.NEWS_ITEMS, "idx_newsId", "unique", ["newsId"]);
+  await ensureIndex(COLLECTIONS.COMMITTEE_MEMBERS, "idx_memberId", "unique", ["memberId"]);
 
   console.log("\n🎉 Appwrite Database schema successfully created and configured!");
 }

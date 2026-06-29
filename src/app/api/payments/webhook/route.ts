@@ -34,6 +34,8 @@ export async function activateMembershipByOrderId(orderId: string, paymentId: st
     user.isMember = true;
     user.memberSince = membership.startDate;
     user.membershipId = membership.membershipId;
+    if (!user.publicVisibility) user.publicVisibility = "public";
+    user.showMembershipPublically = user.publicVisibility !== "private";
     await user.save();
   }
 

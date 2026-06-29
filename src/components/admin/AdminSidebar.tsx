@@ -9,6 +9,7 @@ import {
   HiOutlineCreditCard,
   HiOutlineHeart,
   HiOutlineHome,
+  HiOutlineNewspaper,
   HiOutlineUserGroup,
   HiOutlineXMark,
 } from "react-icons/hi2";
@@ -16,8 +17,10 @@ import {
 const menuItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: HiOutlineChartBarSquare },
   { href: "/admin/users", label: "Users", icon: HiOutlineUserGroup },
+  { href: "/admin/committee", label: "Executive Committee", icon: HiOutlineUserGroup },
   { href: "/admin/memberships", label: "Memberships", icon: HiOutlineCreditCard },
   { href: "/admin/donations", label: "Donations", icon: HiOutlineHeart },
+  { href: "/admin/news", label: "News & Gallery", icon: HiOutlineNewspaper },
 ];
 
 export default function AdminSidebar() {

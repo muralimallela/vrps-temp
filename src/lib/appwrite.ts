@@ -1,4 +1,4 @@
-import { Client, Databases } from "node-appwrite";
+import { Client, Databases, Storage } from "node-appwrite";
 
 const endpoint = process.env.APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1";
 const projectId = process.env.APPWRITE_PROJECT_ID || "";
@@ -13,9 +13,20 @@ export const COLLECTIONS = {
   COUNTERS: "counters",
   DONATIONS: "donations",
   MEMBERSHIPS: "memberships",
+  NEWS_ITEMS: "news_items",
+  COMMITTEE_MEMBERS: "committee_members",
+} as const;
+
+export const STORAGE_BUCKETS = {
+  NEWS_MEDIA: process.env.APPWRITE_STORAGE_BUCKET_ID || "news_media",
+  COMMITTEE_MEDIA: process.env.APPWRITE_COMMITTEE_BUCKET_ID || "committee_media",
 } as const;
 
 export function getAppwriteServerClient() {
+  const endpoint = process.env.APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1";
+  const projectId = process.env.APPWRITE_PROJECT_ID || "";
+  const apiKey = process.env.APPWRITE_API_KEY || "";
+
   const client = new Client();
   client
     .setEndpoint(endpoint)
@@ -28,4 +39,9 @@ export function getAppwriteServerClient() {
 export function getAppwriteDatabases() {
   const client = getAppwriteServerClient();
   return new Databases(client);
+}
+
+export function getAppwriteStorage() {
+  const client = getAppwriteServerClient();
+  return new Storage(client);
 }

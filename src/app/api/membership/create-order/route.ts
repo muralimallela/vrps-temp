@@ -25,6 +25,16 @@ export async function POST(req: Request) {
     const amount = Number(body.amount ?? 99);
     assertMinimumAmount(amount);
 
+    const publicVisibility = body.publicVisibility || "public";
+    const publicDisplayName = body.publicDisplayName || "";
+    const showMembershipPublically = publicVisibility !== "private";
+
+    // Update user consent preferences immediately
+    user.publicVisibility = publicVisibility;
+    user.publicDisplayName = publicDisplayName;
+    user.showMembershipPublically = showMembershipPublically;
+    await user.save();
+
     const address = await Address.findOne({ userId: user.userId });
     if (!isAddressComplete(address)) {
       return fail("Complete address is required for membership", 400);
