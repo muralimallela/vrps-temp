@@ -45,6 +45,9 @@ const COLLECTIONS = {
   MEMBERSHIPS: "memberships",
   NEWS_ITEMS: "news_items",
   COMMITTEE_MEMBERS: "committee_members",
+  CONSENT_RECORDS: "consent_records",
+  DATA_RIGHTS_REQUESTS: "data_rights_requests",
+  GALLERY_ITEMS: "gallery_items",
 } as const;
 
 async function sleep(ms: number) {
@@ -231,6 +234,53 @@ async function setupSchema() {
   await ensureAttribute(COLLECTIONS.COMMITTEE_MEMBERS, "createdAt", () => databases.createDatetimeAttribute(databaseId, COLLECTIONS.COMMITTEE_MEMBERS, "createdAt", false));
   await ensureAttribute(COLLECTIONS.COMMITTEE_MEMBERS, "updatedAt", () => databases.createDatetimeAttribute(databaseId, COLLECTIONS.COMMITTEE_MEMBERS, "updatedAt", false));
 
+  // 9. Consent Records Schema (DPDP Act Compliance)
+  console.log("\n📋 Provisioning Consent Records collection...");
+  await prepareCollection(COLLECTIONS.CONSENT_RECORDS, "ConsentRecords", RESET_COLLECTIONS);
+  await ensureAttribute(COLLECTIONS.CONSENT_RECORDS, "consentId", () => databases.createStringAttribute(databaseId, COLLECTIONS.CONSENT_RECORDS, "consentId", 128, true));
+  await ensureAttribute(COLLECTIONS.CONSENT_RECORDS, "userId", () => databases.createStringAttribute(databaseId, COLLECTIONS.CONSENT_RECORDS, "userId", 128, true));
+  await ensureAttribute(COLLECTIONS.CONSENT_RECORDS, "purposeKey", () => databases.createStringAttribute(databaseId, COLLECTIONS.CONSENT_RECORDS, "purposeKey", 128, true));
+  await ensureAttribute(COLLECTIONS.CONSENT_RECORDS, "status", () => databases.createStringAttribute(databaseId, COLLECTIONS.CONSENT_RECORDS, "status", 32, false, "granted"));
+  await ensureAttribute(COLLECTIONS.CONSENT_RECORDS, "consentTextVersion", () => databases.createStringAttribute(databaseId, COLLECTIONS.CONSENT_RECORDS, "consentTextVersion", 64, false, "v1.0-2026-08"));
+  await ensureAttribute(COLLECTIONS.CONSENT_RECORDS, "ipAddress", () => databases.createStringAttribute(databaseId, COLLECTIONS.CONSENT_RECORDS, "ipAddress", 128, false, ""));
+  await ensureAttribute(COLLECTIONS.CONSENT_RECORDS, "userAgent", () => databases.createStringAttribute(databaseId, COLLECTIONS.CONSENT_RECORDS, "userAgent", 512, false, ""));
+  await ensureAttribute(COLLECTIONS.CONSENT_RECORDS, "notes", () => databases.createStringAttribute(databaseId, COLLECTIONS.CONSENT_RECORDS, "notes", 1024, false, ""));
+  await ensureAttribute(COLLECTIONS.CONSENT_RECORDS, "grantedAt", () => databases.createDatetimeAttribute(databaseId, COLLECTIONS.CONSENT_RECORDS, "grantedAt", false));
+  await ensureAttribute(COLLECTIONS.CONSENT_RECORDS, "withdrawnAt", () => databases.createDatetimeAttribute(databaseId, COLLECTIONS.CONSENT_RECORDS, "withdrawnAt", false));
+
+  // 10. Data Rights Requests Schema (DPDP Act Compliance)
+  console.log("\n📋 Provisioning Data Rights Requests collection...");
+  await prepareCollection(COLLECTIONS.DATA_RIGHTS_REQUESTS, "DataRightsRequests", RESET_COLLECTIONS);
+  await ensureAttribute(COLLECTIONS.DATA_RIGHTS_REQUESTS, "requestId", () => databases.createStringAttribute(databaseId, COLLECTIONS.DATA_RIGHTS_REQUESTS, "requestId", 128, true));
+  await ensureAttribute(COLLECTIONS.DATA_RIGHTS_REQUESTS, "userId", () => databases.createStringAttribute(databaseId, COLLECTIONS.DATA_RIGHTS_REQUESTS, "userId", 128, false, "anonymous"));
+  await ensureAttribute(COLLECTIONS.DATA_RIGHTS_REQUESTS, "name", () => databases.createStringAttribute(databaseId, COLLECTIONS.DATA_RIGHTS_REQUESTS, "name", 128, true));
+  await ensureAttribute(COLLECTIONS.DATA_RIGHTS_REQUESTS, "email", () => databases.createStringAttribute(databaseId, COLLECTIONS.DATA_RIGHTS_REQUESTS, "email", 128, true));
+  await ensureAttribute(COLLECTIONS.DATA_RIGHTS_REQUESTS, "phone", () => databases.createStringAttribute(databaseId, COLLECTIONS.DATA_RIGHTS_REQUESTS, "phone", 64, false, ""));
+  await ensureAttribute(COLLECTIONS.DATA_RIGHTS_REQUESTS, "membershipId", () => databases.createStringAttribute(databaseId, COLLECTIONS.DATA_RIGHTS_REQUESTS, "membershipId", 128, false, ""));
+  await ensureAttribute(COLLECTIONS.DATA_RIGHTS_REQUESTS, "requestType", () => databases.createStringAttribute(databaseId, COLLECTIONS.DATA_RIGHTS_REQUESTS, "requestType", 64, true));
+  await ensureAttribute(COLLECTIONS.DATA_RIGHTS_REQUESTS, "status", () => databases.createStringAttribute(databaseId, COLLECTIONS.DATA_RIGHTS_REQUESTS, "status", 32, false, "submitted"));
+  await ensureAttribute(COLLECTIONS.DATA_RIGHTS_REQUESTS, "details", () => databases.createStringAttribute(databaseId, COLLECTIONS.DATA_RIGHTS_REQUESTS, "details", 4096, false, ""));
+  await ensureAttribute(COLLECTIONS.DATA_RIGHTS_REQUESTS, "correctionData", () => databases.createStringAttribute(databaseId, COLLECTIONS.DATA_RIGHTS_REQUESTS, "correctionData", 4096, false, ""));
+  await ensureAttribute(COLLECTIONS.DATA_RIGHTS_REQUESTS, "nomineeDetails", () => databases.createStringAttribute(databaseId, COLLECTIONS.DATA_RIGHTS_REQUESTS, "nomineeDetails", 2048, false, ""));
+  await ensureAttribute(COLLECTIONS.DATA_RIGHTS_REQUESTS, "resolutionNotes", () => databases.createStringAttribute(databaseId, COLLECTIONS.DATA_RIGHTS_REQUESTS, "resolutionNotes", 2048, false, ""));
+  await ensureAttribute(COLLECTIONS.DATA_RIGHTS_REQUESTS, "ipAddress", () => databases.createStringAttribute(databaseId, COLLECTIONS.DATA_RIGHTS_REQUESTS, "ipAddress", 128, false, ""));
+  await ensureAttribute(COLLECTIONS.DATA_RIGHTS_REQUESTS, "userAgent", () => databases.createStringAttribute(databaseId, COLLECTIONS.DATA_RIGHTS_REQUESTS, "userAgent", 512, false, ""));
+  await ensureAttribute(COLLECTIONS.DATA_RIGHTS_REQUESTS, "requestedAt", () => databases.createDatetimeAttribute(databaseId, COLLECTIONS.DATA_RIGHTS_REQUESTS, "requestedAt", false));
+  await ensureAttribute(COLLECTIONS.DATA_RIGHTS_REQUESTS, "resolvedAt", () => databases.createDatetimeAttribute(databaseId, COLLECTIONS.DATA_RIGHTS_REQUESTS, "resolvedAt", false));
+
+  // 11. Gallery Items Schema
+  console.log("\n📋 Provisioning Gallery Items collection...");
+  await prepareCollection(COLLECTIONS.GALLERY_ITEMS, "GalleryItems", RESET_COLLECTIONS);
+  await ensureAttribute(COLLECTIONS.GALLERY_ITEMS, "galleryId", () => databases.createStringAttribute(databaseId, COLLECTIONS.GALLERY_ITEMS, "galleryId", 128, true));
+  await ensureAttribute(COLLECTIONS.GALLERY_ITEMS, "title", () => databases.createStringAttribute(databaseId, COLLECTIONS.GALLERY_ITEMS, "title", 256, true));
+  await ensureAttribute(COLLECTIONS.GALLERY_ITEMS, "category", () => databases.createStringAttribute(databaseId, COLLECTIONS.GALLERY_ITEMS, "category", 64, true));
+  await ensureAttribute(COLLECTIONS.GALLERY_ITEMS, "date", () => databases.createStringAttribute(databaseId, COLLECTIONS.GALLERY_ITEMS, "date", 64, true));
+  await ensureAttribute(COLLECTIONS.GALLERY_ITEMS, "location", () => databases.createStringAttribute(databaseId, COLLECTIONS.GALLERY_ITEMS, "location", 256, false, ""));
+  await ensureAttribute(COLLECTIONS.GALLERY_ITEMS, "description", () => databases.createStringAttribute(databaseId, COLLECTIONS.GALLERY_ITEMS, "description", 4096, false, ""));
+  await ensureAttribute(COLLECTIONS.GALLERY_ITEMS, "src", () => databases.createStringAttribute(databaseId, COLLECTIONS.GALLERY_ITEMS, "src", 1024, true));
+  await ensureAttribute(COLLECTIONS.GALLERY_ITEMS, "fileId", () => databases.createStringAttribute(databaseId, COLLECTIONS.GALLERY_ITEMS, "fileId", 128, false, ""));
+  await ensureAttribute(COLLECTIONS.GALLERY_ITEMS, "featured", () => databases.createBooleanAttribute(databaseId, COLLECTIONS.GALLERY_ITEMS, "featured", false, false));
+
   // Storage bucket provisioning
   console.log("\n📁 Provisioning Appwrite Storage bucket for News Media...");
   try {
@@ -265,6 +315,23 @@ async function setupSchema() {
     }
   }
 
+  const galleryBucketId = process.env.APPWRITE_GALLERY_BUCKET_ID || "gallery_media";
+  console.log("\n📁 Provisioning Appwrite Storage bucket for Gallery Media...");
+  try {
+    await storage.getBucket(galleryBucketId);
+    console.log(`  └─ Bucket '${galleryBucketId}' exists.`);
+  } catch (err: any) {
+    if (err?.code === 404) {
+      console.log(`  └─ Creating Storage Bucket '${galleryBucketId}'...`);
+      try {
+        await storage.createBucket(galleryBucketId, "Gallery Media", [Permission.read(Role.any())], false, true);
+        console.log(`  └─ Bucket '${galleryBucketId}' created.`);
+      } catch (e: any) {
+        console.warn(`  ⚠️ Warning creating bucket: ${e.message}`);
+      }
+    }
+  }
+
   console.log("\n⏳ Waiting for Appwrite indexes and attributes initialization...");
   await sleep(4000);
 
@@ -277,6 +344,9 @@ async function setupSchema() {
   await ensureIndex(COLLECTIONS.MEMBERSHIPS, "idx_membershipId", "unique", ["membershipId"]);
   await ensureIndex(COLLECTIONS.NEWS_ITEMS, "idx_newsId", "unique", ["newsId"]);
   await ensureIndex(COLLECTIONS.COMMITTEE_MEMBERS, "idx_memberId", "unique", ["memberId"]);
+  await ensureIndex(COLLECTIONS.CONSENT_RECORDS, "idx_consentId", "unique", ["consentId"]);
+  await ensureIndex(COLLECTIONS.DATA_RIGHTS_REQUESTS, "idx_requestId", "unique", ["requestId"]);
+  await ensureIndex(COLLECTIONS.GALLERY_ITEMS, "idx_galleryId", "unique", ["galleryId"]);
 
   console.log("\n🎉 Appwrite Database schema successfully created and configured!");
 }

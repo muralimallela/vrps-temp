@@ -223,18 +223,14 @@
     "guidingPersonalities": "The guiding personalities behind this movement are:",
     "founders": {
       "1": {
-        "name": "Gunji Santosh Kumar",
-        "description": "from a construction worker's family"
-      },
-      "2": {
-        "name": "Vadde Raj",
+        "name": "Gunji Santosh Kumar Vadde Raj",
         "description": "Lawyer"
       },
-      "3": {
+      "2": {
         "name": "Tammishetty Shivakrishna",
         "description": "Science Research Student"
       },
-      "4": {
+      "3": {
         "name": "Battula Upendra",
         "description": "Journalist"
       }

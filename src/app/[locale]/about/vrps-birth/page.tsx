@@ -12,14 +12,25 @@ const VRPSBirthPage: React.FC = () => {
     <FaBuilding className="text-amber-700 w-6 h-6" key="building" />,
     <FaGavel className="text-amber-700 w-6 h-6" key="gavel" />,
     <FaFlask className="text-amber-700 w-6 h-6" key="flask" />,
-    <FaNewspaper className="text-amber-700 w-6 h-6" key="newspaper" />
+    <FaNewspaper className="text-amber-700 w-6 h-6" key="newspaper" />,
   ];
 
   const founders = [
-    { name: t("founders.1.name"), desc: t("founders.1.description"), icon: founderIcons[0] },
-    { name: t("founders.2.name"), desc: t("founders.2.description"), icon: founderIcons[1] },
-    { name: t("founders.3.name"), desc: t("founders.3.description"), icon: founderIcons[2] },
-    { name: t("founders.4.name"), desc: t("founders.4.description"), icon: founderIcons[3] }
+    {
+      name: t("founders.1.name"),
+      desc: t("founders.1.description"),
+      icon: founderIcons[1],
+    },
+    {
+      name: t("founders.2.name"),
+      desc: t("founders.2.description"),
+      icon: founderIcons[2],
+    },
+    {
+      name: t("founders.3.name"),
+      desc: t("founders.3.description"),
+      icon: founderIcons[3],
+    },
   ];
 
   return (
@@ -43,7 +54,6 @@ const VRPSBirthPage: React.FC = () => {
 
       {/* ======= Main Content & Founders Grid ======= */}
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-3 gap-10 md:gap-12">
-        
         {/* Story Section (Left 2 columns) */}
         <div className="lg:col-span-2 space-y-8 leading-relaxed">
           {/* Paragraph 1 - Blockquote quote card */}
@@ -61,7 +71,9 @@ const VRPSBirthPage: React.FC = () => {
           {/* Core Question & Answer Callout Card */}
           <div className="bg-gradient-to-br from-amber-500/10 to-red-500/10 border border-amber-500/20 rounded-2xl p-6 sm:p-8 shadow-sm">
             <h3 className="text-xl sm:text-2xl font-bold text-red-800 mb-4 flex items-center gap-3">
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-red-800 text-white text-sm font-bold">?</span>
+              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-red-800 text-white text-sm font-bold">
+                ?
+              </span>
               {t("question")}
             </h3>
             <p className="text-lg sm:text-xl text-gray-800 font-semibold leading-relaxed border-l-2 border-red-700 pl-4 py-1">
@@ -93,10 +105,13 @@ const VRPSBirthPage: React.FC = () => {
             <h2 className="text-xl sm:text-2xl font-extrabold text-red-800 mb-6 border-b border-amber-100 pb-4">
               {t("guidingPersonalities")}
             </h2>
-            
+
             <div className="space-y-5">
               {founders.map((founder, i) => (
-                <div key={i} className="group flex items-start gap-4 p-3 rounded-xl hover:bg-amber-50/50 transition duration-300 border border-transparent hover:border-amber-200/50">
+                <div
+                  key={i}
+                  className="group flex items-start gap-4 p-3 rounded-xl hover:bg-amber-50/50 transition duration-300 border border-transparent hover:border-amber-200/50"
+                >
                   <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-xl bg-amber-100/80 group-hover:bg-amber-100 transition duration-300">
                     {founder.icon}
                   </div>
@@ -111,17 +126,19 @@ const VRPSBirthPage: React.FC = () => {
                 </div>
               ))}
             </div>
-            
+
             {/* Context/Quote card */}
             <div className="mt-8 p-4 bg-amber-50 rounded-xl border border-amber-100 text-center">
-              <p className="text-xs text-amber-800 uppercase tracking-widest font-bold mb-1">Our Mission</p>
+              <p className="text-xs text-amber-800 uppercase tracking-widest font-bold mb-1">
+                Our Mission
+              </p>
               <p className="text-sm text-gray-700 font-medium">
-                Socio-Economic Development through Education, Representation, and Collective Struggle.
+                Socio-Economic Development through Education, Representation,
+                and Collective Struggle.
               </p>
             </div>
           </div>
         </div>
-        
       </div>
     </div>
   );

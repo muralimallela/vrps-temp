@@ -20,6 +20,8 @@ const ntr = NTR({
   variable: "--font-telugu",
 });
 
+import CookieConsentBanner from "@/src/components/consent/CookieConsentBanner";
+
 export default async function LocaleLayout({
   children,
 }: {
@@ -45,6 +47,7 @@ export default async function LocaleLayout({
         {children}
         <Footer />
         <ScrollToTop/>
+        <CookieConsentBanner />
       </NextIntlClientProvider>
     </div>
   );

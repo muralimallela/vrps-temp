@@ -10,6 +10,7 @@ import {
   HiOutlineHeart,
   HiOutlineHome,
   HiOutlineNewspaper,
+  HiOutlinePhoto,
   HiOutlineUserGroup,
   HiOutlineXMark,
 } from "react-icons/hi2";
@@ -20,7 +21,8 @@ const menuItems = [
   { href: "/admin/committee", label: "Executive Committee", icon: HiOutlineUserGroup },
   { href: "/admin/memberships", label: "Memberships", icon: HiOutlineCreditCard },
   { href: "/admin/donations", label: "Donations", icon: HiOutlineHeart },
-  { href: "/admin/news", label: "News & Gallery", icon: HiOutlineNewspaper },
+  { href: "/admin/news", label: "News & Items", icon: HiOutlineNewspaper },
+  { href: "/admin/gallery", label: "Photo Galleries", icon: HiOutlinePhoto },
 ];
 
 export default function AdminSidebar() {

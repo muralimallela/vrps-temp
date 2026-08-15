@@ -32,12 +32,25 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
       ? `${address.district}, ${address.state}`
       : "Verified Member";
 
+    // Privacy Protection: Mask name and exact location if cryptographic signature is missing or invalid
+    let displayName = user.name;
+    let displayLocation = addressText;
+
+    if (!isAuthentic) {
+      // Partial masking to prevent automated scraping of member database
+      const parts = user.name.split(" ");
+      displayName = parts
+        .map((p) => (p.length > 2 ? `${p[0]}${"*".repeat(p.length - 2)}${p[p.length - 1]}` : `${p[0]}*`))
+        .join(" ");
+      displayLocation = address?.state || "India";
+    }
+
     return ok({
-      membershipId: officialMemId,
-      name: user.name,
+      membershipId: isAuthentic ? officialMemId : `${officialMemId.slice(0, 4)}****`,
+      name: displayName,
       status: "Verified Active Member",
       memberSince: user.memberSince || user.createdAt,
-      location: addressText,
+      location: displayLocation,
       isAuthentic,
       verifiedAt: new Date().toISOString(),
     });

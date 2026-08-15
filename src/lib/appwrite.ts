@@ -15,11 +15,15 @@ export const COLLECTIONS = {
   MEMBERSHIPS: "memberships",
   NEWS_ITEMS: "news_items",
   COMMITTEE_MEMBERS: "committee_members",
+  CONSENT_RECORDS: "consent_records",
+  DATA_RIGHTS_REQUESTS: "data_rights_requests",
+  GALLERY_ITEMS: "gallery_items",
 } as const;
 
 export const STORAGE_BUCKETS = {
   NEWS_MEDIA: process.env.APPWRITE_STORAGE_BUCKET_ID || "news_media",
   COMMITTEE_MEDIA: process.env.APPWRITE_COMMITTEE_BUCKET_ID || "committee_media",
+  GALLERY_MEDIA: process.env.APPWRITE_GALLERY_BUCKET_ID || "gallery_media",
 } as const;
 
 export function getAppwriteServerClient() {

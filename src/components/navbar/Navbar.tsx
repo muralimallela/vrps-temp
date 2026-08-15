@@ -38,7 +38,7 @@ export const Navbar: React.FC = () => {
         { name: t("transparency.impact"), href: "/community/impact" },
       ],
     },
-    { name: t("photoGalleries"), href: "/#" },
+    { name: t("photoGalleries"), href: "/photo-galleries" },
     { name: t("newsAndItems"), href: "/news-and-items" },
   ];
   const containerSkin = atTop

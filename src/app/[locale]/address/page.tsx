@@ -37,6 +37,8 @@ export default function AddressPage() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
 
+  const [consentAddress, setConsentAddress] = useState(false);
+
   useEffect(() => {
     const load = async () => {
       setLoading(true);
@@ -65,8 +67,30 @@ export default function AddressPage() {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!consentAddress) {
+      setMessage("Affirmative consent is required: Please check the consent box below to save your address.");
+      return;
+    }
+
     setSaving(true);
     setMessage("Saving address...");
+
+    // Record consent under DPDP Act 2023
+    try {
+      await fetch("/api/consent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          purposeKey: "address_verification_and_storage",
+          status: "granted",
+          consentTextVersion: "v1.0-2026-08",
+          notes: "User consented to residential address processing for Member ID Card",
+        }),
+      });
+    } catch (e) {
+      console.warn("Consent log warning:", e);
+    }
+
     const res = await fetch("/api/profile/address", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -213,6 +237,25 @@ export default function AddressPage() {
                   onChange={(e) => setAddress({ ...address, pincode: e.target.value })}
                   placeholder="Enter pincode"
                 />
+              </div>
+
+              {/* DPDP Act 2023 Explicit Consent Checkbox */}
+              <div className="md:col-span-2 rounded-xl border border-[#EECDA3] bg-[#FFFDF9] p-3 text-xs text-[#5A3A2E]">
+                <label className="flex items-start gap-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={consentAddress}
+                    onChange={(e) => setConsentAddress(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 rounded border-[#d9b892] text-[#6A160A] focus:ring-[#6A160A]"
+                  />
+                  <span className="leading-relaxed">
+                    <strong className="text-[#3D120D]">* Required:</strong> I consent to VRPS collecting and storing my residential address for regional community verification and digital Member ID generation as detailed in the{" "}
+                    <Link href="/privacy" target="_blank" className="font-semibold text-[#6A160A] underline">
+                      Privacy Notice
+                    </Link>
+                    .
+                  </span>
+                </label>
               </div>
 
               <div className="md:col-span-2 flex items-center gap-3">

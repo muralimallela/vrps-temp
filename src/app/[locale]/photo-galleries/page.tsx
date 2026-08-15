@@ -3,7 +3,6 @@
 import { FC, useState, useEffect, useCallback, TouchEvent } from "react";
 import Image from "next/image";
 import {
-  HiOutlineNewspaper,
   HiOutlinePhoto,
   HiOutlineSparkles,
   HiOutlineChevronLeft,
@@ -16,35 +15,135 @@ import {
   HiOutlineCheck,
   HiOutlineClipboardDocument,
   HiOutlineLink,
+  HiOutlineMapPin,
+  HiOutlineCalendar,
 } from "react-icons/hi2";
 import { FaWhatsapp, FaFacebook } from "react-icons/fa";
 
-interface NewsItem {
+interface PhotoGalleryItem {
   id: string | number;
   src: string;
   title: string;
   category: string;
   date: string;
+  location?: string;
+  description?: string;
 }
 
-const fallbackItems: NewsItem[] = [
-  { id: "1", src: "/images/news/1.jpeg", title: "Community Gathering & Convention", category: "Events", date: "June 2026" },
-  { id: "2", src: "/images/news/2.jpeg", title: "State Level Executive Meeting", category: "Executive", date: "May 2026" },
-  { id: "3", src: "/images/news/3.jpeg", title: "Empowerment & Youth Workshop", category: "Workshops", date: "May 2026" },
-  { id: "4", src: "/images/news/4.jpeg", title: "Regional Leadership Rally", category: "Rallies", date: "April 2026" },
-  { id: "5", src: "/images/news/5.jpeg", title: "Scholarship Distribution Drive", category: "Welfare", date: "April 2026" },
-  { id: "6", src: "/images/news/6.jpeg", title: "Cultural Welfare Association Meet", category: "Culture", date: "March 2026" },
-  { id: "7", src: "/images/news/7.jpeg", title: "Member Verification Initiative", category: "Executive", date: "March 2026" },
-  { id: "8", src: "/images/news/9.jpeg", title: "Press Conference & Memorandum", category: "Press", date: "February 2026" },
-  { id: "9", src: "/images/news/10.jpeg", title: "District Representation Conference", category: "Events", date: "January 2026" },
-  { id: "10", src: "/images/news/12.jpeg", title: "Community Development Assembly", category: "Welfare", date: "January 2026" },
-  { id: "11", src: "/images/news/14.jpeg", title: "Honorary Recognition Ceremony", category: "Events", date: "December 2025" },
+const fallbackPhotos: PhotoGalleryItem[] = [
+  {
+    id: "1",
+    src: "/images/news/1.jpeg",
+    title: "All-India Vaddera Mahasabha Convention",
+    category: "Conventions",
+    date: "June 2026",
+    location: "Hyderabad, Telangana",
+    description: "Grand statewide assembly of VRPS community leaders, elders, and delegates discussing educational and social representation.",
+  },
+  {
+    id: "2",
+    src: "/images/news/2.jpeg",
+    title: "State Executive Committee Planning Session",
+    category: "Executive Meets",
+    date: "May 2026",
+    location: "Vijayawada, Andhra Pradesh",
+    description: "Strategic executive council meeting to review welfare programs and regional coordination.",
+  },
+  {
+    id: "3",
+    src: "/images/news/3.jpeg",
+    title: "Youth Leadership & Skill Development Workshop",
+    category: "Youth & Education",
+    date: "May 2026",
+    location: "Warangal, Telangana",
+    description: "Empowering next-generation community youth with vocational skills, career mentorship, and higher education guidance.",
+  },
+  {
+    id: "4",
+    src: "/images/news/4.jpeg",
+    title: "Historic Rights & Awareness Rally",
+    category: "Regional Assemblies",
+    date: "April 2026",
+    location: "Guntur, Andhra Pradesh",
+    description: "Massive peaceful demonstration underscoring constitutional rights and social equity for the Vaddera community.",
+  },
+  {
+    id: "5",
+    src: "/images/news/5.jpeg",
+    title: "Student Welfare & Scholarship Distribution",
+    category: "Welfare Drives",
+    date: "April 2026",
+    location: "Khammam, Telangana",
+    description: "Distribution of educational grants and academic supplies to deserving students across rural districts.",
+  },
+  {
+    id: "6",
+    src: "/images/news/6.jpeg",
+    title: "Traditional Cultural Heritage & Arts Festival",
+    category: "Cultural Events",
+    date: "March 2026",
+    location: "Tirupati, Andhra Pradesh",
+    description: "Celebrating historical craftsmanship, folk songs, and heritage of the community.",
+  },
+  {
+    id: "7",
+    src: "/images/news/7.jpeg",
+    title: "Community Membership Verification Campaign",
+    category: "Executive Meets",
+    date: "March 2026",
+    location: "Nalgonda, Telangana",
+    description: "Digital verification drive issuing tamper-proof HMAC encrypted member ID cards.",
+  },
+  {
+    id: "8",
+    src: "/images/news/9.jpeg",
+    title: "National Press Conference on Community Welfare",
+    category: "Conventions",
+    date: "February 2026",
+    location: "New Delhi",
+    description: "Submission of comprehensive representations to central authorities on socio-economic upliftment.",
+  },
+  {
+    id: "9",
+    src: "/images/news/10.jpeg",
+    title: "Regional District Delegates Conference",
+    category: "Regional Assemblies",
+    date: "January 2026",
+    location: "Kurnool, Andhra Pradesh",
+    description: "Coordination meet between district convenors and central office bearers.",
+  },
+  {
+    id: "10",
+    src: "/images/news/12.jpeg",
+    title: "Healthcare & Free Medical Consultation Camp",
+    category: "Welfare Drives",
+    date: "January 2026",
+    location: "Mahabubnagar, Telangana",
+    description: "Free medical health check-up, eye screening, and medication distribution for senior community citizens.",
+  },
+  {
+    id: "11",
+    src: "/images/news/14.jpeg",
+    title: "Elders & Veteran Activists Felicitation",
+    category: "Cultural Events",
+    date: "December 2025",
+    location: "Visakhapatnam, Andhra Pradesh",
+    description: "Honoring lifelong dedication of senior activists and community leaders.",
+  },
 ];
 
-const categories = ["All", "Events", "Executive", "Welfare", "Workshops", "Culture", "Press", "Rallies"];
+const PHOTO_CATEGORIES = [
+  "All",
+  "Conventions",
+  "Welfare Drives",
+  "Youth & Education",
+  "Cultural Events",
+  "Regional Assemblies",
+  "Executive Meets",
+];
 
-const NewsGallery: FC = () => {
-  const [items, setItems] = useState<NewsItem[]>(fallbackItems);
+const PhotoGalleriesPage: FC = () => {
+  const [items, setItems] = useState<PhotoGalleryItem[]>(fallbackPhotos);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("All");
@@ -53,12 +152,12 @@ const NewsGallery: FC = () => {
   const [copiedCardId, setCopiedCardId] = useState<string | number | null>(null);
   const [isShareMenuOpen, setIsShareMenuOpen] = useState<boolean>(false);
 
-  // Touch swipe handling for mobile UX
+  // Touch swipe handling
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
-  // Helper to build a canonical shareable URL for a specific news item
-  const getItemShareUrl = useCallback((item: NewsItem): string => {
+  // Helper to build canonical direct URL for a photo
+  const getItemShareUrl = useCallback((item: PhotoGalleryItem): string => {
     if (typeof window === "undefined") return "";
     const url = new URL(window.location.href);
     url.searchParams.set("item", String(item.id));
@@ -66,8 +165,8 @@ const NewsGallery: FC = () => {
     return url.toString();
   }, []);
 
-  // Sync URL when item is opened
-  const openItemModal = useCallback((index: number, itemList: NewsItem[]) => {
+  // Open modal and sync URL
+  const openPhotoModal = useCallback((index: number, itemList: PhotoGalleryItem[]) => {
     if (index >= 0 && index < itemList.length) {
       setSelectedIndex(index);
       setIsShareMenuOpen(false);
@@ -93,14 +192,14 @@ const NewsGallery: FC = () => {
     }
   }, []);
 
-  // Fetch news and open item if specified in URL query
+  // Fetch photos and open item if deep link is present
   useEffect(() => {
-    const fetchNews = async () => {
+    const fetchPhotos = async () => {
       try {
         setIsLoading(true);
-        const res = await fetch("/api/public/news");
+        const res = await fetch("/api/public/gallery");
         const body = await res.json();
-        let loadedItems = fallbackItems;
+        let loadedItems = fallbackPhotos;
         if (body.success && Array.isArray(body.data) && body.data.length > 0) {
           loadedItems = body.data.map((item: any) => ({
             id: item._id || item.$id,
@@ -108,11 +207,13 @@ const NewsGallery: FC = () => {
             title: item.title,
             category: item.category,
             date: item.date,
+            location: item.location || "",
+            description: item.description || "",
           }));
           setItems(loadedItems);
         }
 
-        // Check if a direct item ID was shared in URL (?item=XYZ or ?id=XYZ or #XYZ)
+        // Direct Item Deep-Linking Check (?item=XYZ or ?id=XYZ or #XYZ)
         if (typeof window !== "undefined") {
           const params = new URLSearchParams(window.location.search);
           const sharedId = params.get("item") || params.get("id") || window.location.hash.replace("#", "");
@@ -123,9 +224,8 @@ const NewsGallery: FC = () => {
             );
             if (foundIndex !== -1) {
               setSelectedIndex(foundIndex);
-              // Scroll card into view smoothly
               setTimeout(() => {
-                const element = document.getElementById(`news-item-${sharedId}`);
+                const element = document.getElementById(`photo-item-${sharedId}`);
                 if (element) {
                   element.scrollIntoView({ behavior: "smooth", block: "center" });
                 }
@@ -134,15 +234,15 @@ const NewsGallery: FC = () => {
           }
         }
       } catch (err) {
-        console.warn("Using fallback news items due to fetch error:", err);
+        console.warn("Using fallback photo gallery items:", err);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchNews();
+    fetchPhotos();
   }, []);
 
-  // Listen to popstate (e.g. Browser Back Button)
+  // Popstate handler for browser back/forward
   useEffect(() => {
     const handlePopState = () => {
       if (typeof window === "undefined") return;
@@ -168,23 +268,24 @@ const NewsGallery: FC = () => {
     const matchesCategory = activeCategory === "All" || item.category === activeCategory;
     const matchesSearch =
       item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.category.toLowerCase().includes(searchQuery.toLowerCase());
+      item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (item.location && item.location.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesCategory && matchesSearch;
   });
 
   const handleNext = useCallback(() => {
     if (selectedIndex !== null && filteredItems.length > 0) {
       const nextIdx = selectedIndex < filteredItems.length - 1 ? selectedIndex + 1 : 0;
-      openItemModal(nextIdx, filteredItems);
+      openPhotoModal(nextIdx, filteredItems);
     }
-  }, [selectedIndex, filteredItems, openItemModal]);
+  }, [selectedIndex, filteredItems, openPhotoModal]);
 
   const handlePrev = useCallback(() => {
     if (selectedIndex !== null && filteredItems.length > 0) {
       const prevIdx = selectedIndex > 0 ? selectedIndex - 1 : filteredItems.length - 1;
-      openItemModal(prevIdx, filteredItems);
+      openPhotoModal(prevIdx, filteredItems);
     }
-  }, [selectedIndex, filteredItems, openItemModal]);
+  }, [selectedIndex, filteredItems, openPhotoModal]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -197,7 +298,7 @@ const NewsGallery: FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedIndex, handleNext, handlePrev, closeModal]);
 
-  // Touch Swipe Handlers for mobile
+  // Touch Swipe Handlers
   const handleTouchStart = (e: TouchEvent) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
@@ -260,9 +361,9 @@ const NewsGallery: FC = () => {
     }
   };
 
-  const handleNativeShare = async (item: NewsItem) => {
+  const handleNativeShare = async (item: PhotoGalleryItem) => {
     const shareUrl = getItemShareUrl(item);
-    const shareText = `VRPS News Highlight: ${item.title}`;
+    const shareText = `VRPS Gallery: ${item.title}`;
 
     if (navigator.share) {
       try {
@@ -281,18 +382,19 @@ const NewsGallery: FC = () => {
     }
   };
 
-  const shareWhatsApp = (item: NewsItem) => {
+  const shareWhatsApp = (item: PhotoGalleryItem) => {
     const shareUrl = getItemShareUrl(item);
-    const shareText = `*VRPS News Highlight*\n\n*${item.title}*\nCategory: ${item.category}\nDate: ${item.date}\n\n👉 View details here:\n${shareUrl}`;
+    const locationText = item.location ? `\n📍 ${item.location}` : "";
+    const shareText = `*VRPS Photo Gallery*\n\n*${item.title}*\nCategory: ${item.category}\nDate: ${item.date}${locationText}\n\n👉 View photo:\n${shareUrl}`;
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, "_blank");
   };
 
-  const shareFacebook = (item: NewsItem) => {
+  const shareFacebook = (item: PhotoGalleryItem) => {
     const shareUrl = getItemShareUrl(item);
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, "_blank");
   };
 
-  const handleDownload = (item: NewsItem) => {
+  const handleDownload = (item: PhotoGalleryItem) => {
     const link = document.createElement("a");
     link.href = item.src;
     link.download = `${item.title.replace(/\s+/g, "_")}.jpg`;
@@ -307,26 +409,26 @@ const NewsGallery: FC = () => {
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#fff8ef,_#fdeed8_35%,_#f4d8b0_100%)] px-4 py-8 md:px-8 md:py-12">
       <section className="mx-auto max-w-7xl">
-        {/* Top Hero Card aligned with VRPS app theme */}
+        {/* Top Hero Card */}
         <div className="mb-10 rounded-3xl border border-[#e4c69d] bg-white/85 p-6 md:p-10 shadow-[0_20px_40px_-24px_rgba(90,28,22,0.45)] backdrop-blur">
           <div className="flex items-center gap-2 mb-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#6A160A] px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-white shadow-sm">
-              <HiOutlineNewspaper className="h-4 w-4" />
-              VRPS Media & Updates
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0F5F54] px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-white shadow-sm">
+              <HiOutlinePhoto className="h-4 w-4" />
+              VRPS Photo Archives
             </span>
           </div>
           <h1 className="text-3xl font-black leading-tight text-[#3d120d] md:text-4xl lg:text-5xl">
-            News & Community Gallery
+            Community Photo Galleries
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-[#5a3a2e] md:text-base">
-            Explore recent press highlights, community conventions, welfare drives, and developmental milestones across all regional committees. Direct item links can be shared instantly.
+            Visual chronicle of state conventions, welfare outreach, historic milestones, youth workshops, and community events across Andhra Pradesh, Telangana, and across India.
           </p>
 
           {/* Controls Bar: Search & Filter */}
           <div className="mt-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-t border-[#eddcc8] pt-6">
             {/* Categories Filter Tabs */}
             <div className="flex flex-wrap items-center gap-2">
-              {categories.map((cat) => (
+              {PHOTO_CATEGORIES.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => {
@@ -335,7 +437,7 @@ const NewsGallery: FC = () => {
                   }}
                   className={`rounded-xl px-4 py-2 text-xs font-bold transition-all duration-200 ${
                     activeCategory === cat
-                      ? "bg-[#6A160A] text-white shadow-md scale-105"
+                      ? "bg-[#0F5F54] text-white shadow-md scale-105"
                       : "bg-white/80 text-[#5a3a2e] border border-[#e4c69d] hover:bg-[#fff3e5] hover:text-[#3d120d]"
                   }`}
                 >
@@ -350,7 +452,7 @@ const NewsGallery: FC = () => {
                 <HiOutlineMagnifyingGlass className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8a5b3a]" />
                 <input
                   type="text"
-                  placeholder="Search gallery updates..."
+                  placeholder="Search photos by title or location..."
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
@@ -360,13 +462,13 @@ const NewsGallery: FC = () => {
                 />
               </div>
               <span className="hidden sm:inline-block shrink-0 rounded-xl bg-[#0F5F54]/10 border border-[#0F5F54]/20 px-3 py-2 text-xs font-bold text-[#0F5F54]">
-                {filteredItems.length} {filteredItems.length === 1 ? "Update" : "Updates"}
+                {filteredItems.length} {filteredItems.length === 1 ? "Photo" : "Photos"}
               </span>
             </div>
           </div>
         </div>
 
-        {/* Gallery Grid or Skeleton Loading */}
+        {/* Photos Grid or Skeleton Loading */}
         {isLoading ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
@@ -382,8 +484,8 @@ const NewsGallery: FC = () => {
         ) : filteredItems.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-3xl border border-[#e4c69d] bg-white/90 p-12 text-center shadow-sm">
             <HiOutlinePhoto className="h-12 w-12 text-[#8a5b3a]/50 mb-3" />
-            <h3 className="text-lg font-bold text-[#3d120d]">No News Items Found</h3>
-            <p className="mt-1 text-xs text-[#6a4a3b]">Try searching with a different keyword or selecting another category.</p>
+            <h3 className="text-lg font-bold text-[#3d120d]">No Photos Found</h3>
+            <p className="mt-1 text-xs text-[#6a4a3b]">Try selecting another category or searching with a different term.</p>
             <button
               onClick={() => {
                 setActiveCategory("All");
@@ -400,8 +502,8 @@ const NewsGallery: FC = () => {
             {filteredItems.map((item, index) => (
               <article
                 key={item.id}
-                id={`news-item-${item.id}`}
-                onClick={() => openItemModal(index, filteredItems)}
+                id={`photo-item-${item.id}`}
+                onClick={() => openPhotoModal(index, filteredItems)}
                 className="group relative cursor-pointer overflow-hidden rounded-2xl border border-[#e4c69d] bg-white p-2.5 shadow-md transition-all duration-300 hover:-translate-y-1.5 hover:border-[#0F5F54] hover:shadow-2xl"
               >
                 {/* Image Container */}
@@ -419,14 +521,22 @@ const NewsGallery: FC = () => {
                   <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100 backdrop-blur-[2px]">
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3.5 py-1.5 text-xs font-bold text-[#3d120d] shadow-lg">
                       <HiOutlineEye className="h-4 w-4 text-[#0F5F54]" />
-                      View & Share Highlight
+                      View High-Res Photo
                     </span>
                   </div>
 
                   {/* Category Badge Top Right */}
-                  <span className="absolute top-3 right-3 rounded-lg bg-black/60 backdrop-blur px-2.5 py-1 text-[10px] font-bold text-white uppercase tracking-wider shadow-sm">
+                  <span className="absolute top-3 right-3 rounded-lg bg-black/65 backdrop-blur px-2.5 py-1 text-[10px] font-bold text-white uppercase tracking-wider shadow-sm">
                     {item.category}
                   </span>
+
+                  {/* Location Tag Bottom Left (if present) */}
+                  {item.location && (
+                    <span className="absolute bottom-2.5 left-2.5 inline-flex items-center gap-1 rounded-md bg-black/60 backdrop-blur px-2 py-0.5 text-[10px] font-medium text-white shadow-sm">
+                      <HiOutlineMapPin className="h-3 w-3 text-emerald-400" />
+                      {item.location}
+                    </span>
+                  )}
                 </div>
 
                 {/* Card Info Bottom */}
@@ -437,7 +547,7 @@ const NewsGallery: FC = () => {
                   <div className="mt-1.5 flex items-center justify-between text-[11px] text-[#7a5b4c] font-medium border-t border-black/5 pt-2">
                     <span className="flex items-center gap-1">
                       <HiOutlineSparkles className="h-3.5 w-3.5 text-[#0F5F54]" />
-                      VRPS Highlights
+                      VRPS Archives
                     </span>
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-[#8a5b3a]">{item.date}</span>
@@ -465,7 +575,7 @@ const NewsGallery: FC = () => {
           </div>
         )}
 
-        {/* Lightbox Modal with Direct Item Sharing & Navigation */}
+        {/* Lightbox Modal with Direct Photo Sharing & Navigation */}
         {selectedItem !== null && selectedIndex !== null && (
           <div
             className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 transition-all duration-300 animate-fadeIn"
@@ -514,7 +624,7 @@ const NewsGallery: FC = () => {
                   <button
                     onClick={handlePrev}
                     className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/60 hover:bg-black/80 text-white p-3 shadow-lg transition hover:scale-110 border border-white/10 backdrop-blur z-10"
-                    aria-label="Previous image"
+                    aria-label="Previous photo"
                   >
                     <HiOutlineChevronLeft className="h-6 w-6" />
                   </button>
@@ -525,7 +635,7 @@ const NewsGallery: FC = () => {
                   <button
                     onClick={handleNext}
                     className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/60 hover:bg-black/80 text-white p-3 shadow-lg transition hover:scale-110 border border-white/10 backdrop-blur z-10"
-                    aria-label="Next image"
+                    aria-label="Next photo"
                   >
                     <HiOutlineChevronRight className="h-6 w-6" />
                   </button>
@@ -534,11 +644,30 @@ const NewsGallery: FC = () => {
 
               {/* Bottom Action Bar & Caption */}
               <div className="relative w-full mt-3 bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                <div>
+                <div className="max-w-2xl">
                   <h4 className="text-base font-bold text-white">{selectedItem.title}</h4>
-                  <p className="text-xs text-gray-300 mt-0.5">
-                    Category: {selectedItem.category} • {selectedItem.date}
-                  </p>
+                  <div className="flex flex-wrap items-center gap-3 text-xs text-gray-300 mt-1">
+                    <span>Category: {selectedItem.category}</span>
+                    <span>•</span>
+                    <span className="inline-flex items-center gap-1">
+                      <HiOutlineCalendar className="h-3.5 w-3.5" />
+                      {selectedItem.date}
+                    </span>
+                    {selectedItem.location && (
+                      <>
+                        <span>•</span>
+                        <span className="inline-flex items-center gap-1 text-emerald-300">
+                          <HiOutlineMapPin className="h-3.5 w-3.5" />
+                          {selectedItem.location}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                  {selectedItem.description && (
+                    <p className="mt-1 text-xs text-gray-200 line-clamp-2 leading-relaxed">
+                      {selectedItem.description}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2 self-end sm:self-auto">
@@ -549,7 +678,7 @@ const NewsGallery: FC = () => {
                     className="inline-flex items-center gap-1.5 rounded-xl bg-white/20 hover:bg-white/30 px-3.5 py-2 text-xs font-bold text-white transition backdrop-blur"
                   >
                     <HiOutlineShare className="h-4 w-4" />
-                    Share Item
+                    Share Photo
                   </button>
 
                   {/* Download Button */}
@@ -567,7 +696,7 @@ const NewsGallery: FC = () => {
                 {isShareMenuOpen && (
                   <div className="absolute right-4 bottom-16 z-50 w-72 rounded-2xl border border-white/20 bg-slate-900/95 p-3.5 shadow-2xl backdrop-blur-xl text-white animate-fadeIn">
                     <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-2.5">
-                      <span className="text-xs font-bold text-gray-200">Share This Highlight</span>
+                      <span className="text-xs font-bold text-gray-200">Share This Photo</span>
                       <button onClick={() => setIsShareMenuOpen(false)} className="text-gray-400 hover:text-white">
                         <HiOutlineXMark className="h-4 w-4" />
                       </button>
@@ -622,4 +751,4 @@ const NewsGallery: FC = () => {
   );
 };
 
-export default NewsGallery;
+export default PhotoGalleriesPage;

@@ -82,6 +82,8 @@ export default function DonationsPage() {
   >("public");
   const [publicDisplayName, setPublicDisplayName] = useState("");
   const [supporterMessage, setSupporterMessage] = useState("");
+  const [consentProcessing, setConsentProcessing] = useState(false);
+  const [consentSupporterRoll, setConsentSupporterRoll] = useState(false);
 
   const formattedAmount = useMemo(
     () =>
@@ -93,7 +95,44 @@ export default function DonationsPage() {
     [amount],
   );
 
+  const recordDonationConsent = async () => {
+    try {
+      await fetch("/api/consent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          purposeKey: "donation_payment_processing",
+          status: "granted",
+          consentTextVersion: "v1.0-2026-08",
+          notes: "User consented to processing donation transaction & tax records",
+        }),
+      });
+
+      if (consentSupporterRoll) {
+        await fetch("/api/consent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            purposeKey: "donation_public_supporter_roll",
+            status: "granted",
+            consentTextVersion: "v1.0-2026-08",
+            notes: `Supporter roll opt-in: ${publicVisibility}`,
+          }),
+        });
+      }
+    } catch (e) {
+      console.warn("Consent logging notice:", e);
+    }
+  };
+
   const createOneTime = async () => {
+    if (!consentProcessing) {
+      setOneTimeMessage(
+        "Affirmative consent is required: Please agree to contribution data processing to continue."
+      );
+      return;
+    }
+
     if (!Number.isFinite(amount) || amount < 99) {
       setOneTimeMessage(
         "Contribution starts at Rs. 99. Please enter an amount of Rs. 99 or more.",
@@ -103,6 +142,7 @@ export default function DonationsPage() {
 
     setIsOneTimeLoading(true);
     setOneTimeMessage("Preparing secure checkout...");
+    await recordDonationConsent();
 
     try {
       const res = await fetch("/api/donations/create-order", {
@@ -172,8 +212,16 @@ export default function DonationsPage() {
   };
 
   const createMonthly = async () => {
+    if (!consentProcessing) {
+      setMonthlyMessage(
+        "Affirmative consent is required: Please agree to contribution data processing to continue."
+      );
+      return;
+    }
+
     setIsMonthlyLoading(true);
     setMonthlyMessage("Preparing monthly support...");
+    await recordDonationConsent();
     try {
       const res = await fetch("/api/donations/create-subscription", {
         method: "POST",
@@ -401,6 +449,42 @@ export default function DonationsPage() {
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* DPDP Act 2023 Explicit Consent Section (Unticked by default) */}
+            <div className="space-y-3 rounded-2xl border border-[#EECDA3] bg-white p-5 shadow-sm text-xs text-[#5A3A2E]">
+              <div className="flex items-center gap-1.5 font-bold text-[#5A1C16]">
+                <HiOutlineShieldCheck className="h-4 w-4 text-[#0F5F54]" />
+                <span>Consent & Contribution Data Protection (DPDP Act 2023)</span>
+              </div>
+
+              <label className="flex items-start gap-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={consentProcessing}
+                  onChange={(e) => setConsentProcessing(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-[#d9b892] text-[#6A160A] focus:ring-[#6A160A]"
+                />
+                <span className="leading-relaxed">
+                  <strong className="text-[#3D120D]">* Required:</strong> I consent to VRPS processing my donation transaction records, amount, and contact information for financial verification and official receipt generation in accordance with the{" "}
+                  <a href="/privacy" target="_blank" className="font-semibold text-[#6A160A] underline">
+                    Privacy Notice
+                  </a>
+                  .
+                </span>
+              </label>
+
+              <label className="flex items-start gap-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={consentSupporterRoll}
+                  onChange={(e) => setConsentSupporterRoll(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-[#d9b892] text-[#0F5F54] focus:ring-[#0F5F54]"
+                />
+                <span className="leading-relaxed">
+                  <strong>Optional:</strong> I consent to publishing my contribution on the community supporters roll as per the visibility option selected above.
+                </span>
+              </label>
             </div>
 
             {/* Action Cards */}

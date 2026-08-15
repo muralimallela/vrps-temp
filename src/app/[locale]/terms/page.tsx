@@ -80,6 +80,55 @@ export default function TermsPage() {
             </p>
           </section>
 
+          <section>
+            <h2 className="text-xl font-semibold text-[#5A1C16] mb-3 flex items-center gap-2">
+              <span>9. Data Protection & DPDP Act (2023) Compliance</span>
+              <span className="text-[11px] font-normal text-amber-800 bg-amber-100 px-2 py-0.5 rounded">[LEGAL_REVIEW_REQUIRED]</span>
+            </h2>
+            <p className="mb-3">
+              VRPS processes personal data in accordance with the <strong>Digital Personal Data Protection Act, 2023 (DPDP Act)</strong> and our{" "}
+              <Link href="/privacy" className="text-[#5A1C16] underline font-medium">
+                Privacy Notice
+              </Link>
+              . By using this website, creating a membership profile, or submitting voluntary contributions:
+            </p>
+            <div className="space-y-3 text-xs">
+              <div className="p-3.5 rounded-xl border border-[#EECDA3] bg-[#FFFDF9]">
+                <strong className="text-[#5A1C16] block mb-1">A. Data Fiduciary Commitment & Processing Basis</strong>
+                <p className="text-gray-600">
+                  VRPS operates as a Data Fiduciary and processes your personal data strictly upon your affirmative consent or for recognized statutory purposes. We implement reasonable technical and organizational safeguards against personal data breaches.
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-xl border border-[#EECDA3] bg-[#FFFDF9]">
+                <strong className="text-[#5A1C16] block mb-1">B. Statutory Duties of Data Principals (Section 15)</strong>
+                <p className="text-gray-600 mb-1.5">
+                  Under Section 15 of the DPDP Act 2023, every user (Data Principal) agrees and undertakes to:
+                </p>
+                <ul className="list-disc pl-5 space-y-1 text-gray-600">
+                  <li>Not impersonate another person while providing personal data for membership, ID generation, or donations.</li>
+                  <li>Not suppress any material information while providing address proof or personal details for community records.</li>
+                  <li>Not file false or frivolous grievances or complaints with the Organization or the Data Protection Board of India.</li>
+                  <li>Furnish only verifiably authentic and accurate information at all times.</li>
+                </ul>
+                <p className="text-[11px] text-amber-900 mt-2 font-medium">
+                  <em>Note: Failure to adhere to Section 15 duties may attract statutory penalties up to ₹10,000 as prescribed under the DPDP Act 2023.</em>
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-xl border border-[#EECDA3] bg-[#FFFDF9]">
+                <strong className="text-[#5A1C16] block mb-1">C. Exercise of Data Rights & Grievance Redressal</strong>
+                <p className="text-gray-600">
+                  You may exercise your statutory rights to access, correction, erasure, nomination, or consent withdrawal at any time via our{" "}
+                  <Link href="/data-rights" className="text-[#5A1C16] underline font-medium">
+                    Data Rights Portal
+                  </Link>
+                  . For unresolved grievances, you may contact our Nodal Grievance Officer at <a href="mailto:vaddera@gmail.com" className="text-[#5A1C16] underline font-medium">vaddera@gmail.com</a>.
+                </p>
+              </div>
+            </div>
+          </section>
+
           <section className="pt-4 border-t border-gray-200">
             <h2 className="text-xl font-semibold text-[#5A1C16] mb-3">Contact Us</h2>
             <p>

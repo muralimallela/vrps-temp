@@ -14,6 +14,7 @@ import {
   HiOutlineCheckBadge,
   HiOutlineHeart,
   HiOutlineArrowRight,
+  HiOutlineShieldCheck,
 } from "react-icons/hi2";
 
 function loadRazorpayScript() {
@@ -75,6 +76,8 @@ export default function MembershipPage() {
     "private" | "public" | "anonymous"
   >("public");
   const [publicDisplayName, setPublicDisplayName] = useState("");
+  const [consentProcessing, setConsentProcessing] = useState(false);
+  const [consentDirectory, setConsentDirectory] = useState(false);
 
   useEffect(() => {
     async function checkProfile() {
@@ -104,6 +107,11 @@ export default function MembershipPage() {
   );
 
   const activateMembership = async () => {
+    if (!consentProcessing) {
+      setMessage("Affirmative consent is required: Please agree to personal data processing for membership ID creation to proceed.");
+      return;
+    }
+
     if (!Number.isFinite(amount) || amount < 99) {
       setMessage(
         "Membership starts at Rs. 99. Please choose an amount of Rs. 99 or more.",
@@ -113,6 +121,35 @@ export default function MembershipPage() {
 
     setLoading(true);
     setMessage("Preparing your membership...");
+
+    // Record consent under DPDP Act 2023
+    try {
+      await fetch("/api/consent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          purposeKey: "membership_data_processing",
+          status: "granted",
+          consentTextVersion: "v1.0-2026-08",
+          notes: "User consented to data processing for membership ID generation & records",
+        }),
+      });
+
+      if (consentDirectory) {
+        await fetch("/api/consent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            purposeKey: "membership_public_directory_listing",
+            status: "granted",
+            consentTextVersion: "v1.0-2026-08",
+            notes: `Public visibility selected: ${publicVisibility}`,
+          }),
+        });
+      }
+    } catch (e) {
+      console.warn("Consent logging notice:", e);
+    }
 
     try {
       const res = await fetch("/api/membership/create-order", {
@@ -465,6 +502,42 @@ export default function MembershipPage() {
                   </label>
                 </div>
               )}
+            </div>
+
+            {/* DPDP Act 2023 Explicit Consent Section (Unticked by default) */}
+            <div className="mt-5 space-y-3 rounded-xl border border-[#e4c69d] bg-[#fffaf4] p-4 text-xs text-[#5A3A2E]">
+              <div className="flex items-center gap-1.5 font-bold text-[#5A1C16]">
+                <HiOutlineShieldCheck className="h-4 w-4 text-[#0F5F54]" />
+                <span>Consent & Data Protection (DPDP Act 2023)</span>
+              </div>
+
+              <label className="flex items-start gap-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={consentProcessing}
+                  onChange={(e) => setConsentProcessing(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-[#d9b892] text-[#6A160A] focus:ring-[#6A160A]"
+                />
+                <span className="leading-relaxed">
+                  <strong className="text-[#3D120D]">* Required:</strong> I consent to the collection and processing of my name, phone, email, and address details by VRPS for official membership administration and generation of my verified digital Member ID Card in accordance with the{" "}
+                  <Link href="/privacy" target="_blank" className="font-semibold text-[#6A160A] underline">
+                    Privacy Notice
+                  </Link>
+                  .
+                </span>
+              </label>
+
+              <label className="flex items-start gap-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={consentDirectory}
+                  onChange={(e) => setConsentDirectory(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-[#d9b892] text-[#0F5F54] focus:ring-[#0F5F54]"
+                />
+                <span className="leading-relaxed">
+                  <strong>Optional:</strong> I consent to displaying my membership on the public community roll as per my chosen listing preference above. (Can be withdrawn anytime from profile settings).
+                </span>
+              </label>
             </div>
 
             <button
