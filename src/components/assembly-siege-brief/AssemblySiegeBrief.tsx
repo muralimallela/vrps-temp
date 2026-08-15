@@ -13,9 +13,9 @@ export default function AssemblySiegeBrief() {
       subtitle={t("subtitle")}
       description={t("description")}
       imageSrc="/assembly-siege.webp"
-      imageAlt={t("imageAlt")}
+      imageAlt={t("imageAlt") || "Chalo Assembly Siege Demonstration"}
       buttonText={t("buttonText")}
-      href="assembly-siege"
+      href="/assembly-siege"
       reverse={true}
     />
   );

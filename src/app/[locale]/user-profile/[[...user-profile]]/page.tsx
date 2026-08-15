@@ -1,6 +1,8 @@
-"use client";
-
+import { Metadata } from "next";
 import { UserProfile } from "@clerk/nextjs";
+import { constructNoIndexMetadata } from "@/src/lib/seo";
+
+export const metadata: Metadata = constructNoIndexMetadata("User Account Profile");
 
 export default function UserProfilePage() {
   return (
@@ -11,4 +13,3 @@ export default function UserProfilePage() {
     </main>
   );
 }
-

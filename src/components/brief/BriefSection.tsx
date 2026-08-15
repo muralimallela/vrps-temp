@@ -1,3 +1,4 @@
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -5,8 +6,8 @@ type BriefSectionProps = {
   title: string;
   subtitle?: string;
   description?: string;
-  points?: string[]; // for Awareness lists
-  content?: React.ReactNode; // for custom JSX (bold/italic etc.)
+  points?: string[];
+  content?: React.ReactNode;
   buttonText?: string;
   imageSrc: string;
   imageAlt: string;
@@ -23,7 +24,7 @@ export default function BriefSection({
   buttonText,
   imageSrc,
   imageAlt,
-  href,
+  href = "/",
   reverse = false,
 }: BriefSectionProps) {
   return (
@@ -61,17 +62,22 @@ export default function BriefSection({
             </ul>
           )}
 
-          {/* Rich Content (for Culture, History, etc.) */}
+          {/* Rich Content */}
           {content && (
             <div className="mt-4 text-base sm:text-lg text-[#2B0904] leading-relaxed">
               {content}
             </div>
           )}
-          <Link href={href ? href : "#"}>
-            <button className="mt-6 px-6 py-3 bg-white shadow-md rounded-lg font-semibold text-gray-900 hover:bg-gray-100 transition">
-              {buttonText}
-            </button>
-          </Link>
+
+          {buttonText && (
+            <div className="mt-6">
+              <Link href={href}>
+                <span className="inline-block px-6 py-3 bg-white shadow-md rounded-lg font-semibold text-gray-900 hover:bg-gray-100 hover:shadow-lg transition-all cursor-pointer">
+                  {buttonText}
+                </span>
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Right Image */}
@@ -81,7 +87,7 @@ export default function BriefSection({
               src={imageSrc}
               alt={imageAlt}
               fill
-              sizes="(max-w-768px) 100vw, 50vw"
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover transition-transform duration-500 hover:scale-105"
             />
           </div>

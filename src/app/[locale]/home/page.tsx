@@ -1,12 +1,10 @@
-"use client";
-import { useTranslations } from "next-intl";
+import { redirect } from "next/navigation";
 
-export default function Page() {
-  const t = useTranslations("Home");
-  return (
-    <div>
-      <h1>{t("title")}</h1>
-      <p>{t("description")}</p>
-    </div>
-  );
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  redirect(`/${locale}`);
 }

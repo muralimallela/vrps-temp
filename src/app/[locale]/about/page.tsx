@@ -1,3 +1,10 @@
-export default function Page() {
-  return <h1>About Works</h1>;
+import { redirect } from "next/navigation";
+
+export default async function AboutPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  redirect(`/${locale}/about/objectives`);
 }

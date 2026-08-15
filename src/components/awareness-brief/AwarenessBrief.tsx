@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import BriefSection from "../brief/BriefSection";
 import { useTranslations } from "next-intl";
 
@@ -16,10 +15,10 @@ export default function AwarenessBrief() {
         t("points.1"),
         t("points.2"),
       ]}
-      buttonText = {t("buttonText")}
-      imageSrc="/history.png"
-      imageAlt={t("imageAlt")}
-      href="empowerment"
+      buttonText={t("buttonText")}
+      imageSrc="/awareness.png"
+      imageAlt={t("imageAlt") || "Vaddera Awareness to Empowerment Movement"}
+      href="/empowerment"
     />
   );
 }

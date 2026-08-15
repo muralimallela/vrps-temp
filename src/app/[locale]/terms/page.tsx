@@ -1,8 +1,44 @@
 import Link from "next/link";
+import { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
+import { constructMetadata, SEO_PAGE_DATA } from "@/src/lib/seo";
+import { BreadcrumbJsonLd } from "@/src/components/seo/JsonLd";
 
-export default function TermsPage() {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const isTelugu = locale === "te";
+  const data = isTelugu ? SEO_PAGE_DATA.terms.te : SEO_PAGE_DATA.terms.en;
+
+  return constructMetadata({
+    title: data.title,
+    description: data.description,
+    path: "/terms",
+    locale,
+    keywords: data.keywords,
+  });
+}
+
+export default async function TermsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const isTelugu = locale === "te";
+
   return (
     <div className="min-h-screen bg-[#FFFDF9] py-12 px-4 sm:px-6 lg:px-8 text-[#2B0904]">
+      <BreadcrumbJsonLd
+        items={[
+          { name: isTelugu ? "హోమ్" : "Home", url: `/${locale}` },
+          { name: isTelugu ? "నిబంధనలు & షరతులు" : "Terms & Conditions", url: `/${locale}/terms` },
+        ]}
+      />
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl border border-[#EECDA3] p-8 md:p-12">
         <h1 className="text-3xl md:text-4xl font-extrabold text-[#5A1C16] mb-2">
           Terms & Conditions

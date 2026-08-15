@@ -7,20 +7,22 @@ import { NTR, Noto_Sans } from "next/font/google";
 import { getLocale, getMessages, setRequestLocale } from "next-intl/server";
 import FloatingIcons from "@/src/components/SocialLink";
 import ScrollToTop from "@/src/components/ScrollToTop";
+import { OrganizationJsonLd, WebSiteJsonLd } from "@/src/components/seo/JsonLd";
+import CookieConsentBanner from "@/src/components/consent/CookieConsentBanner";
 
 const notoSans = Noto_Sans({
   subsets: ["latin"],
   weight: ["400", "700"],
   variable: "--font-english",
+  display: "swap",
 });
 
 const ntr = NTR({
   subsets: ["telugu"],
   weight: ["400"],
   variable: "--font-telugu",
+  display: "swap",
 });
-
-import CookieConsentBanner from "@/src/components/consent/CookieConsentBanner";
 
 export default async function LocaleLayout({
   children,
@@ -30,7 +32,7 @@ export default async function LocaleLayout({
   const locale = await getLocale();
   if (!locale) notFound();
 
-  setRequestLocale(locale)
+  setRequestLocale(locale);
 
   const messages = await getMessages();
 
@@ -40,13 +42,17 @@ export default async function LocaleLayout({
       : `${notoSans.variable} ${notoSans.className}`;
 
   return (
-    <div lang={locale} className={currentFont}>
+    <div lang={locale} dir="ltr" className={currentFont}>
+      {/* Schema.org Global Organization & WebSite JSON-LD */}
+      <OrganizationJsonLd locale={locale} />
+      <WebSiteJsonLd locale={locale} />
+
       <NextIntlClientProvider messages={messages}>
         <Navbar />
-        <FloatingIcons/>
+        <FloatingIcons />
         {children}
         <Footer />
-        <ScrollToTop/>
+        <ScrollToTop />
         <CookieConsentBanner />
       </NextIntlClientProvider>
     </div>
