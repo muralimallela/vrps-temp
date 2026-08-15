@@ -1,7 +1,9 @@
 import Hero from "../../components/hero/Hero";
 import CommunityCarousel from "../../components/community-carousel/CommunityCarousel";
 import { VadderaBrief } from "../../components/vaddera-brief/VadderaBrief";
+import { ObjectivesBrief } from "../../components/objectives-brief/ObjectivesBrief";
 import HistoryBrief from "../../components/history-brief/HistoryBrief";
+import AssemblySiegeBrief from "../../components/assembly-siege-brief/AssemblySiegeBrief";
 import CultureBrief from "../../components/culture-brief/CultureBrief";
 import AwarenessBrief from "../../components/awareness-brief/AwarenessBrief";
 import { getLocale, setRequestLocale } from "next-intl/server";
@@ -14,7 +16,10 @@ export default async function Page() {
       <Hero />
       <CommunityCarousel />
       <VadderaBrief />
+      <ObjectivesBrief />
       <HistoryBrief />
+      <hr className=" border-20 border-white" />
+      <AssemblySiegeBrief />
       <hr className=" border-20 border-white" />
       <CultureBrief />
       <hr className=" border-20 border-white" />

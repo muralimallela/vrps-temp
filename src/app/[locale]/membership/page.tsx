@@ -1,0 +1,565 @@
+"use client";
+
+import { useMemo, useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  HiOutlineCheckCircle,
+  HiOutlineIdentification,
+  HiOutlineLockClosed,
+  HiOutlineUserGroup,
+  HiOutlineUser,
+  HiOutlineGlobeAlt,
+  HiOutlineSparkles,
+  HiOutlineCheckBadge,
+  HiOutlineHeart,
+  HiOutlineArrowRight,
+  HiOutlineShieldCheck,
+} from "react-icons/hi2";
+
+function loadRazorpayScript() {
+  return new Promise<boolean>((resolve) => {
+    if (window.Razorpay) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
+
+const MEMBERSHIP_OPTIONS = [
+  { amount: 99, label: "Membership", note: "Start your membership" },
+  { amount: 199, label: "Member Plus", note: "Join and support outreach" },
+  {
+    amount: 499,
+    label: "Community Supporter",
+    note: "Help expand local programs",
+  },
+  {
+    amount: 999,
+    label: "Movement Champion",
+    note: "Make a larger contribution",
+  },
+];
+
+const BENEFITS = [
+  {
+    icon: HiOutlineIdentification,
+    title: "Digital Member ID",
+    text: "View and download your verified VRPS Member ID Card.",
+  },
+  {
+    icon: HiOutlineUserGroup,
+    title: "Stay Connected",
+    text: "Be part of a growing community working toward shared goals.",
+  },
+  {
+    icon: HiOutlineCheckCircle,
+    title: "Member Access",
+    text: "Manage your profile and access member-only features as they grow.",
+  },
+];
+
+export default function MembershipPage() {
+  const router = useRouter();
+  const [amount, setAmount] = useState(99);
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [checkingProfile, setCheckingProfile] = useState(true);
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [publicVisibility, setPublicVisibility] = useState<
+    "private" | "public" | "anonymous"
+  >("public");
+  const [publicDisplayName, setPublicDisplayName] = useState("");
+  const [consentProcessing, setConsentProcessing] = useState(false);
+  const [consentDirectory, setConsentDirectory] = useState(false);
+
+  useEffect(() => {
+    async function checkProfile() {
+      try {
+        const res = await fetch("/api/profile");
+        const data = await res.json();
+        if (data.success && data.data) {
+          setUserProfile(data.data);
+        }
+      } catch (e) {
+        // Ignore error for guest visitors
+      } finally {
+        setCheckingProfile(false);
+      }
+    }
+    checkProfile();
+  }, []);
+
+  const formattedAmount = useMemo(
+    () =>
+      new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        maximumFractionDigits: 0,
+      }).format(amount || 0),
+    [amount],
+  );
+
+  const activateMembership = async () => {
+    if (!consentProcessing) {
+      setMessage("Affirmative consent is required: Please agree to personal data processing for membership ID creation to proceed.");
+      return;
+    }
+
+    if (!Number.isFinite(amount) || amount < 99) {
+      setMessage(
+        "Membership starts at Rs. 99. Please choose an amount of Rs. 99 or more.",
+      );
+      return;
+    }
+
+    setLoading(true);
+    setMessage("Preparing your membership...");
+
+    // Record consent under DPDP Act 2023
+    try {
+      await fetch("/api/consent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          purposeKey: "membership_data_processing",
+          status: "granted",
+          consentTextVersion: "v1.0-2026-08",
+          notes: "User consented to data processing for membership ID generation & records",
+        }),
+      });
+
+      if (consentDirectory) {
+        await fetch("/api/consent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            purposeKey: "membership_public_directory_listing",
+            status: "granted",
+            consentTextVersion: "v1.0-2026-08",
+            notes: `Public visibility selected: ${publicVisibility}`,
+          }),
+        });
+      }
+    } catch (e) {
+      console.warn("Consent logging notice:", e);
+    }
+
+    try {
+      const res = await fetch("/api/membership/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount, publicVisibility, publicDisplayName }),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        const errorMessage =
+          data.error || "We could not start your membership. Please try again.";
+        if (errorMessage.toLowerCase().includes("complete address")) {
+          setMessage(
+            "Please complete your address so we can prepare your Member ID Card. Redirecting you now...",
+          );
+          setTimeout(() => router.push("/address"), 1000);
+          return;
+        }
+        setMessage(errorMessage);
+        return;
+      }
+
+      const loaded = await loadRazorpayScript();
+      if (!loaded || !window.Razorpay) {
+        setMessage(
+          "The secure checkout could not load. Please try again in a moment.",
+        );
+        return;
+      }
+
+      const order = data.data.order;
+      const rz = new window.Razorpay({
+        key: data.data.keyId,
+        amount: order.amount,
+        currency: order.currency,
+        name: "VRPS",
+        description: "Activate VRPS Membership",
+        order_id: order.id,
+        notes: order.notes,
+        handler: async (response: any) => {
+          setMessage(
+            "Thank you for joining VRPS. Activating your membership and generating your official Member ID...",
+          );
+          try {
+            await fetch("/api/membership/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id || order.id,
+                razorpay_payment_id: response.razorpay_payment_id || "pay_mock",
+              }),
+            });
+          } catch (e) {
+            console.error("Payment verification call failed:", e);
+          }
+          setTimeout(() => window.location.reload(), 1500);
+        },
+        modal: {
+          ondismiss: () =>
+            setMessage(
+              "Your membership has not been activated yet. You can continue whenever you are ready.",
+            ),
+        },
+        theme: { color: "#6A160A" },
+      });
+
+      rz.on("payment.failed", () => {
+        setMessage(
+          "We could not complete the payment. Please try again or use another payment method.",
+        );
+      });
+
+      rz.open();
+    } catch {
+      setMessage(
+        "Something went wrong while preparing your membership. Please try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (checkingProfile) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#6A160A] border-t-transparent"></div>
+      </div>
+    );
+  }
+
+  // Active Member UX View
+  if (userProfile && userProfile.isMember) {
+    return (
+      <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#fff8ef,_#fdeed8_35%,_#f4d8b0_100%)] px-4 py-8 md:px-8 md:py-12">
+        <section className="mx-auto max-w-4xl">
+          <div className="overflow-hidden rounded-3xl border border-[#e4c69d] bg-white p-6 shadow-xl md:p-10">
+            <div className="flex flex-col items-center text-center">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#e8f5e9] text-[#2e7d32] shadow-inner">
+                <HiOutlineCheckBadge className="h-12 w-12" />
+              </div>
+
+              <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[#2e7d32] px-4 py-1 text-xs font-bold uppercase tracking-wider text-white">
+                Active VRPS Member
+              </span>
+
+              <h1 className="mt-3 text-3xl font-black text-[#3d120d] md:text-4xl">
+                Welcome, {userProfile.name}!
+              </h1>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#6a4a3b] md:text-base">
+                You are an active member of Vaddera Reservation Porata Samithi. Thank you for supporting community empowerment and representation!
+              </p>
+
+              <div className="mt-6 w-full rounded-2xl border border-[#eddcc8] bg-[#fffaf4] p-4 text-left md:p-6">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <p className="text-[#8a5b3a] text-xs font-semibold">Member ID</p>
+                    <p className="font-bold text-[#6A160A] text-lg">{userProfile.membershipId || userProfile.userId || "Active Member"}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-[#8a5b3a]">Membership Status</p>
+                    <p className="text-lg font-bold text-[#2e7d32]">Verified Active</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 grid w-full gap-4 sm:grid-cols-2">
+                <Link
+                  href="/id-card"
+                  className="flex items-center justify-between rounded-xl border border-[#6A160A] bg-[#6A160A] p-4 text-left font-bold text-white transition hover:bg-[#541007]"
+                >
+                  <div className="flex items-center gap-3">
+                    <HiOutlineIdentification className="h-6 w-6" />
+                    <div>
+                      <p className="text-sm">Digital Member ID Card</p>
+                      <p className="text-xs font-normal text-white/80">View & Download PDF</p>
+                    </div>
+                  </div>
+                  <HiOutlineArrowRight className="h-5 w-5" />
+                </Link>
+
+                <Link
+                  href="/donations"
+                  className="flex items-center justify-between rounded-xl border border-[#eddcc8] bg-[#fff3e5] p-4 text-left font-bold text-[#6A160A] transition hover:bg-[#ffe8cf]"
+                >
+                  <div className="flex items-center gap-3">
+                    <HiOutlineHeart className="h-6 w-6 text-[#0F5F54]" />
+                    <div>
+                      <p className="text-sm">Make a Donation</p>
+                      <p className="text-xs font-normal text-[#6a4a3b]">Support ongoing programs</p>
+                    </div>
+                  </div>
+                  <HiOutlineArrowRight className="h-5 w-5 text-[#6A160A]" />
+                </Link>
+              </div>
+
+              <div className="mt-6 text-center">
+                <Link href="/profile" className="text-xs font-semibold text-[#6A160A] underline hover:text-[#3d120d]">
+                  Update My Profile & Address Details
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#fff8ef,_#fdeed8_35%,_#f4d8b0_100%)] px-4 py-8 md:px-8 md:py-12">
+      <section className="mx-auto max-w-6xl">
+        <div className="mb-8 rounded-2xl border border-[#e4c69d] bg-white/85 p-6 shadow-[0_20px_40px_-24px_rgba(90,28,22,0.45)] backdrop-blur md:p-8">
+          <p className="mb-2 inline-block rounded-full bg-[#6A160A] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white">
+            Join VRPS
+          </p>
+          <h1 className="text-3xl font-black leading-tight text-[#3d120d] md:text-4xl">
+            Become a Member. Strengthen the Movement.
+          </h1>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-[#5a3a2e] md:text-base">
+            Join a community working for representation, opportunity, and
+            progress. Membership starts at Rs. 99 and gives you a verified
+            digital Member ID Card.
+          </p>
+          <div className="mt-5 grid gap-3 md:grid-cols-3">
+            {BENEFITS.map(({ icon: Icon, title, text }) => (
+              <div
+                key={title}
+                className="flex gap-3 rounded-xl border border-[#eddcc8] bg-[#fffaf4] p-3"
+              >
+                <Icon className="mt-0.5 h-5 w-5 shrink-0 text-[#0F5F54]" />
+                <div>
+                  <p className="text-sm font-bold text-[#3d120d]">{title}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-[#6a4a3b]">
+                    {text}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-5">
+          <aside className="rounded-2xl border border-[#e4c69d] bg-white p-5 shadow-sm lg:col-span-2">
+            <h2 className="text-xl font-bold text-[#4a160f]">
+              Choose your contribution
+            </h2>
+            <p className="mt-1 text-sm text-[#6a4a3b]">
+              Membership starts at Rs. 99. A higher amount helps support
+              community programs.
+            </p>
+
+            <div className="mt-4 space-y-2">
+              {MEMBERSHIP_OPTIONS.map((option) => (
+                <button
+                  key={option.amount}
+                  type="button"
+                  onClick={() => setAmount(option.amount)}
+                  className={`w-full rounded-xl border p-3 text-left transition ${
+                    amount === option.amount
+                      ? "border-[#6A160A] bg-[#fff3e5] shadow-sm"
+                      : "border-[#e7d1ba] bg-white hover:bg-[#fffaf4]"
+                  }`}
+                >
+                  <span className="flex items-center justify-between gap-3">
+                    <span className="text-sm font-bold text-[#4a160f]">
+                      {option.label}
+                    </span>
+                    <span className="text-sm font-black text-[#6A160A]">
+                      Rs. {option.amount}
+                    </span>
+                  </span>
+                  <span className="mt-1 block text-xs text-[#7a5b4c]">
+                    {option.note}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            <label className="mt-5 block text-sm font-semibold text-[#4a160f]">
+              Choose another amount
+            </label>
+            <input
+              type="number"
+              min={99}
+              value={amount}
+              onChange={(e) => setAmount(Number(e.target.value))}
+              className="mt-2 w-full rounded-lg border border-[#d9b892] bg-white px-3 py-2 text-base text-[#34120e] outline-none ring-[#6A160A] focus:ring-2"
+            />
+
+            <div className="mt-5 rounded-lg bg-[#fff3e5] p-3">
+              <p className="text-xs uppercase tracking-wide text-[#8a5b3a]">
+                Your contribution
+              </p>
+              <p className="text-2xl font-black text-[#6A160A]">
+                {formattedAmount}
+              </p>
+            </div>
+          </aside>
+
+          <div className="rounded-2xl border border-[#e7d1ba] bg-white p-5 shadow-sm lg:col-span-3">
+            <h3 className="text-xl font-bold text-[#3d120d]">
+              Activate your membership
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-[#6a4a3b]">
+              We use your address to prepare your Member ID Card. Make sure your
+              details are complete, then activate your membership with secure
+              checkout.
+            </p>
+            <Link
+              href="/address"
+              className="mt-3 inline-block rounded-md border border-[#eddcc8] bg-[#fff3e5] px-3 py-1.5 text-xs font-semibold text-[#6A160A] hover:bg-[#fde7cf]"
+            >
+              Review my address
+            </Link>
+
+            <div className="mt-4 rounded-lg border border-[#eddcc8] bg-[#fffaf4] p-4 text-sm text-[#5a3a2e]">
+              <p className="font-semibold">What happens next?</p>
+              <ol className="mt-2 list-decimal space-y-1.5 pl-5">
+                <li>Your contribution is securely processed and verified.</li>
+                <li>
+                  Your membership is activated automatically after confirmation.
+                </li>
+                <li>
+                  Your digital Member ID Card becomes available to view and
+                  download.
+                </li>
+                <li>
+                  You can manage your profile and access member-exclusive
+                  features.
+                </li>
+              </ol>
+              <p className="mt-3 border-t border-[#eddcc8] pt-3 text-xs text-[#6a4a3b]">
+                <strong>Note:</strong> Activation usually happens within a few
+                seconds after confirmation.
+              </p>
+            </div>
+
+            <div className="mt-6 rounded-xl border border-[#cce3dc] bg-white p-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                <div>
+                  <h4 className="font-bold text-[#3d120d] text-sm flex items-center gap-1.5">
+                    <HiOutlineSparkles className="h-4 w-4 text-[#0F5F54]" />
+                    Membership Listing Preference
+                  </h4>
+                  <p className="text-xs text-[#6a4a3b] mt-0.5">
+                    Choose how your membership appears on the community roll.
+                  </p>
+                </div>
+
+                <div className="inline-flex rounded-xl bg-[#f0f7f5] p-1 border border-[#cce3dc] shrink-0">
+                  {[
+                    { id: "public", label: "Public", icon: HiOutlineGlobeAlt },
+                    { id: "anonymous", label: "Anonymous", icon: HiOutlineUser },
+                    { id: "private", label: "Private", icon: HiOutlineLockClosed },
+                  ].map((tab) => {
+                    const Icon = tab.icon;
+                    const selected = publicVisibility === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setPublicVisibility(tab.id as any)}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                          selected
+                            ? "bg-[#0F5F54] text-white shadow-sm"
+                            : "text-[#486a63] hover:text-[#0F5F54]"
+                        }`}
+                      >
+                        <Icon className="h-3.5 w-3.5" />
+                        <span>{tab.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {publicVisibility === "public" && (
+                <div className="mt-3 pt-3 border-t border-[#cce3dc]">
+                  <label className="block">
+                    <p className="mb-1 text-xs font-semibold text-[#5A1C16]">
+                      Display Name (Optional)
+                    </p>
+
+                    <input
+                      type="text"
+                      value={publicDisplayName}
+                      onChange={(e) => setPublicDisplayName(e.target.value)}
+                      placeholder="Leave blank to use profile name"
+                      className="w-full rounded-lg border border-[#dcc9a8] px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0F5F54]"
+                    />
+                  </label>
+                </div>
+              )}
+            </div>
+
+            {/* DPDP Act 2023 Explicit Consent Section (Unticked by default) */}
+            <div className="mt-5 space-y-3 rounded-xl border border-[#e4c69d] bg-[#fffaf4] p-4 text-xs text-[#5A3A2E]">
+              <div className="flex items-center gap-1.5 font-bold text-[#5A1C16]">
+                <HiOutlineShieldCheck className="h-4 w-4 text-[#0F5F54]" />
+                <span>Consent & Data Protection (DPDP Act 2023)</span>
+              </div>
+
+              <label className="flex items-start gap-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={consentProcessing}
+                  onChange={(e) => setConsentProcessing(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-[#d9b892] text-[#6A160A] focus:ring-[#6A160A]"
+                />
+                <span className="leading-relaxed">
+                  <strong className="text-[#3D120D]">* Required:</strong> I consent to the collection and processing of my name, phone, email, and address details by VRPS for official membership administration and generation of my verified digital Member ID Card in accordance with the{" "}
+                  <Link href="/privacy" target="_blank" className="font-semibold text-[#6A160A] underline">
+                    Privacy Notice
+                  </Link>
+                  .
+                </span>
+              </label>
+
+              <label className="flex items-start gap-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={consentDirectory}
+                  onChange={(e) => setConsentDirectory(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-[#d9b892] text-[#0F5F54] focus:ring-[#0F5F54]"
+                />
+                <span className="leading-relaxed">
+                  <strong>Optional:</strong> I consent to displaying my membership on the public community roll as per my chosen listing preference above. (Can be withdrawn anytime from profile settings).
+                </span>
+              </label>
+            </div>
+
+            <button
+              onClick={activateMembership}
+              disabled={loading}
+              className="mt-6 w-full rounded-lg bg-[#6A160A] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#561007] disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {loading ? "Preparing your membership..." : "Activate Membership"}
+            </button>
+            <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-[#7a5b4c]">
+              <HiOutlineLockClosed className="h-4 w-4 text-[#0F5F54]" />
+              Secure checkout. Your details are protected.
+            </p>
+
+            {message && (
+              <p className="mt-3 rounded-md bg-[#fff3e5] p-3 text-xs leading-relaxed text-[#5b2a1f]">
+                {message}
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}

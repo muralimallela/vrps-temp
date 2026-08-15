@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Carattere&family=Goblin+One&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -23,7 +24,57 @@ html[lang="te"] {
   font-family: var(--font-telugu);
 }
 
+.font-goblin {
+  font-family: 'Goblin One', cursive, sans-serif;
+}
+
+.font-carattere {
+  font-family: 'Carattere', cursive, serif;
+}
+
 /* Optional smooth transition */
 html {
   transition: font-family 0.3s ease;
+}
+
+@keyframes vrps-logo-loading {
+  0%,
+  100% {
+    opacity: 0.78;
+    transform: translateY(0) scale(0.96);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-8px) scale(1.04);
+  }
+}
+
+.vrps-logo-loader {
+  animation: vrps-logo-loading 1.5s ease-in-out infinite;
+  filter: drop-shadow(0 10px 14px rgba(106, 22, 10, 0.2));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vrps-logo-loader {
+    animation: none;
+  }
+}
+
+/* 3D Flip Card Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
 }

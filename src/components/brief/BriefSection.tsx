@@ -75,14 +75,16 @@ export default function BriefSection({
         </div>
 
         {/* Right Image */}
-        <div className="flex-1">
-          <Image
-            src={imageSrc}
-            alt={imageAlt}
-            width={500}
-            height={300}
-            className="rounded-md object-cover w-full h-auto"
-          />
+        <div className="flex-1 w-full">
+          <div className="relative w-full md:h-[350px] h-[250px] overflow-hidden rounded-2xl shadow-lg border border-amber-900/10">
+            <Image
+              src={imageSrc}
+              alt={imageAlt}
+              fill
+              sizes="(max-w-768px) 100vw, 50vw"
+              className="object-cover transition-transform duration-500 hover:scale-105"
+            />
+          </div>
         </div>
       </div>
     </section>

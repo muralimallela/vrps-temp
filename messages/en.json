@@ -6,9 +6,18 @@
       "name": "About",
       "history": "History",
       "vadderaCulture": "Vaddera Culture",
-      "empowerment": "Empowerment"
+      "empowerment": "Empowerment",
+      "vrpsBirth": "How VRPS Was Born",
+      "objectives": "Objectives",
+      "assemblySiege": "Assembly Siege"
     },
     "communityMembers": "Community Members",
+    "transparency": {
+      "name": "Community",
+      "members": "Members",
+      "supporters": "Supporters",
+      "impact": "Community Impact"
+    },
     "photoGalleries": "Photo Galleries",
     "newsAndItems": "News & Items",
     "language": "Language",
@@ -200,5 +209,78 @@
         "role": "One of the Founders of VRPS"
       }
     ]
+  },
+  "vrpsBirth": {
+    "title": "How VRPS Was Born....",
+    "subtitle": "A Movement Born from Collective Thought for Social Justice",
+    "p1": "Just as gold, refined in the furnace of fire, becomes an ornament admired by everyone, the humiliation and hardships faced by communities and tribes that lacked social recognition gave the nation Dr. B. R. Ambedkar, the architect of the Constitution and a guiding force for the backward classes.",
+    "p2": "In the same way, although India attained independence, the Vaddera community remained in a situation where true freedom had not reached them. A lawyer who was born into a traditional construction worker's family and overcame numerous hardships to complete a Law degree, along with two other young men who rose to higher education from families engaged in stone quarry work, came together with a shared vision. Their collective thought was to do something meaningful that would secure a future of freedom and dignity for the coming generations.",
+    "question": "What is the real reason behind the backwardness of our community?",
+    "answer": "The Vaddera community continued to remain at the lowest level of society economically, socially, educationally, and in employment opportunities.",
+    "p3": "Although reservations were introduced to bring about social change, they questioned why the condition of the Vaddera community had still not improved. Through their research and efforts, they arrived at one clear conclusion—that the Vaddera community had suffered injustice during the process of reservation allocation.",
+    "p4": "They believed that if the Vaddera community was to secure its future and ensure that the coming generations could live with freedom and dignity, it was essential to achieve the reservation that rightfully belonged to them through a united struggle. This conviction became the foundation for the formation of the Vaddera Reservation Porata Samithi (VRPS).",
+    "p5": "Having themselves struggled to attain higher education despite being born into ordinary families, these young leaders resolved that future generations of the Vaddera community should not have to endure the same hardships in education, employment, and livelihood.",
+    "guidingPersonalities": "The guiding personalities behind this movement are:",
+    "founders": {
+      "1": {
+        "name": "Gunji Santosh Kumar Vadde Raj",
+        "description": "Lawyer"
+      },
+      "2": {
+        "name": "Tammishetty Shivakrishna",
+        "description": "Science Research Student"
+      },
+      "3": {
+        "name": "Battula Upendra",
+        "description": "Journalist"
+      }
+    }
+  },
+  "Objectives": {
+    "title": "Objectives of VRPS",
+    "subtitle": "Our Goals for the Welfare, Development, and Social Justice of the Vaddera Community",
+    "introText": "Information about VRPS programs, community initiatives, welfare activities, campaigns, and other updates will be published in this section.",
+    "list": {
+      "1": "To strive for the inclusion of the Vaddera community under Scheduled Tribe (ST) reservation.",
+      "2": "To work for the welfare and overall development of the Vaddera community and to address their problems and social hardships.",
+      "3": "To help Vaddera people access government welfare schemes available to Backward Classes (BC), including housing sites, loans, and other benefits provided by the State Government and other authorities.",
+      "4": "To work towards securing pension benefits from the age of 50 and government financial assistance of ₹20 lakhs for families of persons who lose their lives in accidents, even if they do not possess welfare cards.",
+      "5": "To encourage and support poor, talented, and other eligible members of the Vaddera community in pursuing higher education and employment opportunities.",
+      "6": "To establish free educational, cultural, and artistic institutions, including Vaddera community buildings, for the benefit of Vaddera people and their children.",
+      "7": "To promote educational opportunities, create awareness about government welfare schemes, and foster unity and cooperation by organizing seminars, study circles, discussions, fairs, and community gatherings in every district each year.",
+      "8": "To establish educational centres and night schools to eradicate illiteracy within the Vaddera community.",
+      "9": "To provide access to proper healthcare by organizing medical camps, eye camps, disease prevention camps, and distributing preventive medicines, especially for Vaddera families living in underprivileged areas.",
+      "10": "To promote agricultural, educational, economic, scientific, social, cultural, and spiritual activities within the Vaddera community.",
+      "11": "To continuously work towards the social, economic, and educational development of the Vaddera community."
+    }
+  },
+  "AssemblySiege": {
+    "title": "The First-Ever Vaddera Community Assembly Siege in History",
+    "subtitle": "Historic Assembly Marches Organized by VRPS for the Vaddera Reservation Movement",
+    "description": "For the first time in nearly 60 years of Vaddera history, a historic Assembly siege was organized under the leadership of VRPS President Mr. Gunji Santosh Kumar. Despite police restrictions and detentions, hundreds of Vaddera youth and leaders courageously participated, making the protest a major success.",
+    "buttonText": "Learn More",
+    "imageAlt": "Historic Assembly Siege",
+    "hero": {
+      "title": "Assembly Siege",
+      "subtitle": "The historic struggle led by VRPS to secure rights and ST reservation for the Vaddera community."
+    },
+    "chaloAssembly1": {
+      "heading": "Chalo Assembly – 1",
+      "date": "15 March 2022",
+      "p1": "On 15 March 2022, the first-ever Chalo Assembly program in nearly 60 years of Vaddera history was organized. Until then, no Vaddera organization or leadership had conducted such an Assembly siege. This historic event was led by Mr. Gunji Santosh Kumar, President of the Vaddera Reservation Porata Samithi (VRPS).",
+      "p2": "During a meeting held at Sundarayya Vignana Kendram, Hyderabad, discussions were held with the available leaders, and one of the major resolutions adopted was to organize an Assembly siege. Based on the proposal of Mr. Gunji Santosh Kumar and Vadderaju, and at a time when no other Vaddera organization had taken the initiative, VRPS organized the Chalo Assembly with the participation of around 100 members of the Vaddera community. With the support of several local Vaddera organizations in Hyderabad, the Assembly siege was successfully carried out."
+    },
+    "chaloAssembly2": {
+      "heading": "Chalo Assembly – 2",
+      "date": "2 September 2022",
+      "p1": "On 2 September 2022, VRPS organized another Assembly siege in Telangana with the participation of hundreds of members, marking another unprecedented event in the history of the Vaddera community.",
+      "p2": "Thousands of Vaddera brothers from different districts of Telangana were prepared to participate and make the protest a success. However, the police took extensive measures to prevent many of them from reaching the Assembly. Several Vaddera youth, leaders of various Vaddera organizations, and community members were placed under house arrest or detained at police stations in an attempt to prevent their participation and create fear.",
+      "p3": "Despite these restrictions, many Vaddera youth responded to the call of VRPS and took part in the protest. The leadership of the President, being a lawyer, inspired confidence among the community. Even after receiving warning and intimidation calls from the police, many members of the Vaddera community travelled from different places and courageously participated in the Assembly siege, making the movement successful. VRPS expressed its gratitude to all those who demonstrated such courage and commitment.",
+      "date2": "2 September 2022"
+    },
+    "assemblyMention": {
+      "heading": "Vaddera ST Reservation Demand Raised in the Assembly – 2023",
+      "p1": "Following these movements, in 2023, Kutbullapur MLA Mr. K. P. Vivekanand raised the demand for Scheduled Tribe (ST) reservation for the Vaddera community in the Telangana Legislative Assembly and appealed for justice for the Vaddera community."
+    }
   }
 }

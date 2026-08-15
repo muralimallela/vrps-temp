@@ -18,15 +18,27 @@ export const Navbar: React.FC = () => {
     { name: t("home"), href: "/" },
     {
       name: t("about.name"),
-      href: "#",
+      href: "/about/objectives",
       dropdown: [
+        { name: t("about.objectives"), href: "/about/objectives" },
+        { name: t("about.vrpsBirth"), href: "/about/vrps-birth" },
+        { name: t("about.assemblySiege"), href: "/assembly-siege" },
         { name: t("about.history"), href: "/history" },
         { name: t("about.vadderaCulture"), href: "/vaddera-culture" },
         { name: t("about.empowerment"), href: "/empowerment" },
       ],
     },
     { name: t("communityMembers"), href: "/executive-committee" },
-    { name: t("photoGalleries"), href: "/#" },
+    {
+      name: t("transparency.name"),
+      href: "#",
+      dropdown: [
+        { name: t("transparency.members"), href: "/community/members" },
+        { name: t("transparency.supporters"), href: "/community/supporters" },
+        { name: t("transparency.impact"), href: "/community/impact" },
+      ],
+    },
+    { name: t("photoGalleries"), href: "/photo-galleries" },
     { name: t("newsAndItems"), href: "/news-and-items" },
   ];
   const containerSkin = atTop
@@ -42,9 +54,9 @@ export const Navbar: React.FC = () => {
           containerSkin,
         ].join(" ")}
       >
-        <div className="max-w-screen-xl mx-auto px-4 py-3 md:py-4 flex items-center justify-between gap-4">
+        <div className="w-full px-4 md:px-8 lg:px-12 py-3 md:py-4 flex items-center justify-between gap-4">
           <NavbarBrand />
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4 lg:gap-6">
             <NavbarLinks links={navLinks} />
             <LanguageDropdown />
             <NavbarActions />
