@@ -70,7 +70,7 @@ export default function ExecutiveCommitteePage() {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-white/10 px-4 py-1.5 text-xs font-bold text-amber-200 backdrop-blur-md mb-6 shadow-sm">
             <HiOutlineSparkles className="h-4 w-4 text-amber-300 animate-pulse" />
-            Vaddera Rashtriya Samkshema Sangham
+            Vaddera Reservation Porata Samithi
           </div>
 
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white drop-shadow-md">

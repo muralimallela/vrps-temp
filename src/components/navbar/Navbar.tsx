@@ -18,8 +18,11 @@ export const Navbar: React.FC = () => {
     { name: t("home"), href: "/" },
     {
       name: t("about.name"),
-      href: "#",
+      href: "/about/objectives",
       dropdown: [
+        { name: t("about.objectives"), href: "/about/objectives" },
+        { name: t("about.vrpsBirth"), href: "/about/vrps-birth" },
+        { name: t("about.assemblySiege"), href: "/assembly-siege" },
         { name: t("about.history"), href: "/history" },
         { name: t("about.vadderaCulture"), href: "/vaddera-culture" },
         { name: t("about.empowerment"), href: "/empowerment" },

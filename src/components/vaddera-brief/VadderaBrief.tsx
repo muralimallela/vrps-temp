@@ -5,6 +5,7 @@ import Image from "next/image";
 import "./VadderaBrief.css";
 import { Roboto } from "next/font/google";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 const roboto = Roboto({
   weight: "700",
@@ -15,7 +16,7 @@ export const VadderaBrief: React.FC = () => {
   const t = useTranslations("VadderaBrief");
 
   return (
-    <div className="bg-gray-50 py-10 px-4 md:px-8 vaddera-brief-bg min-h-screen">
+    <div className="bg-gray-50 py-12 px-4 md:px-8 vaddera-brief-bg min-h-screen">
       {/* Title */}
       <div className="max-w-6xl mx-auto mb-10">
         <h1
@@ -26,7 +27,7 @@ export const VadderaBrief: React.FC = () => {
       </div>
 
       {/* Section Content */}
-      <section className="md:p-8 rounded-lg flex flex-col md:flex-row items-start justify-around gap-1 mx-auto">
+      <section className="md:p-8 rounded-lg flex flex-col md:flex-row items-start justify-around gap-1 mx-auto max-w-6xl">
         {/* Left: Logo */}
         <div className="flex-shrink-0 w-full md:w-1/2 lg:h-[70vh] h-[40vh] relative">
           <Image
@@ -40,16 +41,20 @@ export const VadderaBrief: React.FC = () => {
         </div>
 
         {/* Right: Text Content */}
-        <div className="max-w-xl md:text-left">
-          <p className="text-[#6A160A] mb-4 text-lg md:text-2xl text-justify">
+        <div className="max-w-xl md:text-left flex flex-col justify-center h-full pt-4 md:pt-12">
+          <p className="text-[#6A160A] mb-4 text-lg md:text-2xl text-justify font-medium">
             {t("paragraph1")}
           </p>
-          <p className="text-[#6A160A] mb-6 text-lg md:text-2xl text-justify">
+          <p className="text-[#6A160A] mb-6 text-lg md:text-2xl text-justify font-medium">
             {t("paragraph2")}
           </p>
-          <button className="bg-white text-black font-semibold border border-gray-300 shadow px-5 py-2 rounded hover:shadow-md transition">
-            {t("button")}
-          </button>
+          <div className="flex gap-4">
+            <Link href="/about/vrps-birth">
+              <button className="bg-[#6A160A] text-white hover:bg-[#521107] font-semibold border border-transparent shadow px-5 py-2.5 rounded-lg hover:shadow-md transition cursor-pointer">
+                {t("button")}
+              </button>
+            </Link>
+          </div>
         </div>
       </section>
     </div>
