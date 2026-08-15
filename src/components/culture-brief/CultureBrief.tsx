@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import BriefSection from "../brief/BriefSection";
 import { useTranslations } from "next-intl";
 
@@ -20,9 +19,9 @@ export default function CultureBrief() {
         </>
       }
       imageSrc="/culture.png"
-      imageAlt={t("imageAlt")}
-      buttonText = {t("buttonText")}
-      href = "vaddera-culture"
+      imageAlt={t("imageAlt") || "Vaddera Cultural Heritage and Artistry"}
+      buttonText={t("buttonText")}
+      href="/vaddera-culture"
     />
   );
 }

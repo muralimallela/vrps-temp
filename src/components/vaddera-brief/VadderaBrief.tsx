@@ -16,18 +16,16 @@ export const VadderaBrief: React.FC = () => {
   const t = useTranslations("VadderaBrief");
 
   return (
-    <div className="bg-gray-50 py-12 px-4 md:px-8 vaddera-brief-bg min-h-screen">
+    <section className="bg-gray-50 py-12 px-4 md:px-8 vaddera-brief-bg min-h-screen">
       {/* Title */}
       <div className="max-w-6xl mx-auto mb-10">
-        <h1
-          className={` text-2xl md:text-4xl font-bold text-gray-800 text-center mx-auto`}
-        >
+        <h2 className="text-2xl md:text-4xl font-bold text-gray-800 text-center mx-auto">
           {t("title")}
-        </h1>
+        </h2>
       </div>
 
       {/* Section Content */}
-      <section className="md:p-8 rounded-lg flex flex-col md:flex-row items-start justify-around gap-1 mx-auto max-w-6xl">
+      <div className="md:p-8 rounded-lg flex flex-col md:flex-row items-start justify-around gap-1 mx-auto max-w-6xl">
         {/* Left: Logo */}
         <div className="flex-shrink-0 w-full md:w-1/2 lg:h-[70vh] h-[40vh] relative">
           <Image
@@ -35,6 +33,7 @@ export const VadderaBrief: React.FC = () => {
             title={t("imageTitle")}
             alt={t("imageAlt")}
             fill
+            sizes="(max-width: 768px) 100vw, 50vw"
             className="object-contain"
             priority
           />
@@ -56,7 +55,7 @@ export const VadderaBrief: React.FC = () => {
             </Link>
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 };

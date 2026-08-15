@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import BriefSection from "../brief/BriefSection";
 import { useTranslations } from "next-intl";
 
@@ -13,9 +12,9 @@ export default function HistoryBrief() {
       subtitle={t("subtitle")}
       description={t("description")}
       imageSrc="/history.png"
-      imageAlt={t("imageAlt")}
+      imageAlt={t("imageAlt") || "VRPS Historical Movement Overview"}
       buttonText={t("buttonText")}
-      href={"history"}
+      href="/history"
     />
   );
 }

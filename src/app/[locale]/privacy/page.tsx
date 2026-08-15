@@ -8,10 +8,46 @@ import {
   HiOutlineScale,
   HiOutlineExclamationCircle,
 } from "react-icons/hi2";
+import { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
+import { constructMetadata, SEO_PAGE_DATA } from "@/src/lib/seo";
+import { BreadcrumbJsonLd } from "@/src/components/seo/JsonLd";
 
-export default function PrivacyPolicyPage() {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const isTelugu = locale === "te";
+  const data = isTelugu ? SEO_PAGE_DATA.privacy.te : SEO_PAGE_DATA.privacy.en;
+
+  return constructMetadata({
+    title: data.title,
+    description: data.description,
+    path: "/privacy",
+    locale,
+    keywords: data.keywords,
+  });
+}
+
+export default async function PrivacyPolicyPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const isTelugu = locale === "te";
+
   return (
     <div className="min-h-screen bg-[#FFFDF9] py-12 px-4 sm:px-6 lg:px-8 text-[#2B0904]">
+      <BreadcrumbJsonLd
+        items={[
+          { name: isTelugu ? "హోమ్" : "Home", url: `/${locale}` },
+          { name: isTelugu ? "గోప్యతా విధానం" : "Privacy Policy", url: `/${locale}/privacy` },
+        ]}
+      />
       <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl border border-[#EECDA3] p-6 md:p-12">
         {/* Header */}
         <div className="border-b border-[#EECDA3]/70 pb-6 mb-8">

@@ -1,174 +1,53 @@
-"use client";
+import React from "react";
+import { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
+import { constructMetadata, SEO_PAGE_DATA } from "@/src/lib/seo";
+import { BreadcrumbJsonLd, CollectionPageJsonLd } from "@/src/components/seo/JsonLd";
+import CommunityMembersClient from "@/src/components/community/CommunityMembersClient";
 
-import { useState, useEffect } from "react";
-import MemberCard from "@/src/components/community/MemberCard";
-import { HiOutlineUserGroup, HiOutlineCheckBadge } from "react-icons/hi2";
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const isTelugu = locale === "te";
+  const data = isTelugu ? SEO_PAGE_DATA.communityMembers.te : SEO_PAGE_DATA.communityMembers.en;
 
-interface Member {
-  _id: string;
-  displayName: string;
-  membershipId?: string;
-  joinDate: string;
-  city?: string;
-  district?: string;
-  isAnonymous: boolean;
-}
-
-interface PaginationInfo {
-  page: number;
-  limit: number;
-  total: number;
-  pages: number;
-}
-
-export default function CommunityMembersPage() {
-  const [members, setMembers] = useState<Member[]>([]);
-  const [pagination, setPagination] = useState<PaginationInfo>({
-    page: 1,
-    limit: 20,
-    total: 0,
-    pages: 0,
+  return constructMetadata({
+    title: data.title,
+    description: data.description,
+    path: "/community/members",
+    locale,
+    keywords: data.keywords,
+    image: "/VRPS-LOGO-FINAL.png",
   });
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+}
 
-  useEffect(() => {
-    fetchMembers(pagination.page);
-  }, []);
+export default async function CommunityMembersPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
 
-  const fetchMembers = async (page: number) => {
-    try {
-      setIsLoading(true);
-      const res = await fetch(
-        `/api/public/members?page=${page}&limit=${pagination.limit}`,
-      );
-      const data = await res.json();
-
-      if (data.success) {
-        setMembers(data.data);
-        setPagination(data.pagination);
-        setError(null);
-      } else {
-        setError("Failed to load members");
-      }
-    } catch (err) {
-      console.error("Error fetching members:", err);
-      setError("An error occurred while loading members");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handlePageChange = (newPage: number) => {
-    fetchMembers(newPage);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const isTelugu = locale === "te";
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#fff8ef,_#fdeed8_35%,_#f4d8b0_100%)] px-4 py-8 md:px-8 md:py-12">
-      <section className="mx-auto max-w-6xl">
-        {/* Top Hero Card aligned with VRPS app theme */}
-        <div className="mb-8 rounded-2xl border border-[#e4c69d] bg-white/85 p-6 shadow-[0_20px_40px_-24px_rgba(90,28,22,0.45)] backdrop-blur md:p-8">
-          <p className="mb-2 inline-block rounded-full bg-[#6A160A] px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white">
-            VRPS Community
-          </p>
-          <h1 className="text-3xl font-black leading-tight text-[#3d120d] md:text-4xl">
-            Our Growing Community
-          </h1>
-          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-[#5a3a2e] md:text-base">
-            Meet the active members strengthening representation, education, and social progress across the Vaddera community.
-          </p>
-
-          <div className="mt-5 flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 rounded-xl border border-[#eddcc8] bg-[#fffaf4] px-4 py-2 text-sm font-bold text-[#3d120d]">
-              <HiOutlineUserGroup className="h-5 w-5 text-[#0F5F54]" />
-              <span><strong className="text-[#6A160A]">{pagination.total}</strong> Verified Members Strong</span>
-            </div>
-            <div className="flex items-center gap-2 rounded-xl border border-[#eddcc8] bg-[#fffaf4] px-4 py-2 text-sm font-semibold text-[#6a4a3b]">
-              <HiOutlineCheckBadge className="h-5 w-5 text-[#0F5F54]" />
-              <span>Active Participation</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Members Grid Container */}
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-16 rounded-2xl border border-[#e4c69d] bg-white p-8 shadow-sm">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#6A160A] border-t-transparent mb-3" />
-            <p className="text-sm font-bold text-[#6A160A]">Loading community members...</p>
-          </div>
-        ) : error ? (
-          <div className="rounded-2xl border border-red-200 bg-white p-8 text-center shadow-sm">
-            <p className="text-base font-bold text-red-600">⚠️ Unable to Load Members</p>
-            <p className="mt-1 text-xs text-gray-600">{error}</p>
-          </div>
-        ) : members.length === 0 ? (
-          <div className="rounded-2xl border border-[#e4c69d] bg-white p-12 text-center shadow-sm">
-            <p className="text-xl font-bold text-[#3d120d]">Be Part of Something Special</p>
-            <p className="mt-2 text-sm text-[#6a4a3b]">
-              No members have opted to list publicly yet. Join now and be the first to represent our community!
-            </p>
-          </div>
-        ) : (
-          <>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-8">
-              {members.map((member) => (
-                <MemberCard
-                  key={member._id}
-                  displayName={member.displayName}
-                  membershipId={member.membershipId}
-                  joinDate={member.joinDate}
-                  city={member.city}
-                  district={member.district}
-                  isAnonymous={member.isAnonymous}
-                />
-              ))}
-            </div>
-
-            {/* Pagination */}
-            {pagination.pages > 1 && (
-              <div className="flex flex-col sm:flex-row justify-center items-center gap-3 pt-6 border-t border-[#e4c69d]">
-                <button
-                  onClick={() => handlePageChange(pagination.page - 1)}
-                  disabled={pagination.page === 1}
-                  className="px-5 py-2 bg-[#6A160A] hover:bg-[#561007] disabled:bg-gray-300 text-white font-bold text-xs rounded-lg transition disabled:cursor-not-allowed"
-                >
-                  ← Previous
-                </button>
-
-                <div className="flex gap-2 flex-wrap justify-center">
-                  {Array.from({ length: pagination.pages }, (_, i) => i + 1)
-                    .slice(
-                      Math.max(0, pagination.page - 2),
-                      Math.min(pagination.pages, pagination.page + 1),
-                    )
-                    .map((page) => (
-                      <button
-                        key={page}
-                        onClick={() => handlePageChange(page)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
-                          page === pagination.page
-                            ? "bg-[#6A160A] text-white"
-                            : "bg-white border border-[#e7d1ba] text-[#3d120d] hover:bg-[#fff3e5]"
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    ))}
-                </div>
-
-                <button
-                  onClick={() => handlePageChange(pagination.page + 1)}
-                  disabled={pagination.page === pagination.pages}
-                  className="px-5 py-2 bg-[#6A160A] hover:bg-[#561007] disabled:bg-gray-300 text-white font-bold text-xs rounded-lg transition disabled:cursor-not-allowed"
-                >
-                  Next →
-                </button>
-              </div>
-            )}
-          </>
-        )}
-      </section>
-    </main>
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: isTelugu ? "హోమ్" : "Home", url: `/${locale}` },
+          { name: isTelugu ? "సభ్యుల డైరెక్టరీ" : "Members Directory", url: `/${locale}/community/members` },
+        ]}
+      />
+      <CollectionPageJsonLd
+        title={isTelugu ? SEO_PAGE_DATA.communityMembers.te.title : SEO_PAGE_DATA.communityMembers.en.title}
+        description={isTelugu ? SEO_PAGE_DATA.communityMembers.te.description : SEO_PAGE_DATA.communityMembers.en.description}
+        url={`/${locale}/community/members`}
+      />
+      <CommunityMembersClient isTelugu={isTelugu} />
+    </>
   );
 }

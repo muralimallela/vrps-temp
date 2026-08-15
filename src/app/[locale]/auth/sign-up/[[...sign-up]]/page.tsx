@@ -1,6 +1,8 @@
-"use client";
-
+import { Metadata } from "next";
 import { SignUp } from "@clerk/nextjs";
+import { constructNoIndexMetadata } from "@/src/lib/seo";
+
+export const metadata: Metadata = constructNoIndexMetadata("Sign Up");
 
 export default function SignUpPage() {
   return (
@@ -9,4 +11,3 @@ export default function SignUpPage() {
     </main>
   );
 }
-

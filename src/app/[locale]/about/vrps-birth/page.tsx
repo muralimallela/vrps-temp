@@ -1,44 +1,78 @@
-"use client";
-
 import React from "react";
-import { useTranslations } from "next-intl";
-import { FaBuilding, FaGavel, FaFlask, FaNewspaper } from "react-icons/fa";
+import { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { FaGavel, FaFlask, FaNewspaper } from "react-icons/fa";
+import { constructMetadata, SEO_PAGE_DATA } from "@/src/lib/seo";
+import { ArticleJsonLd, BreadcrumbJsonLd } from "@/src/components/seo/JsonLd";
 
-const VRPSBirthPage: React.FC = () => {
-  const t = useTranslations("vrpsBirth");
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const isTelugu = locale === "te";
+  const data = isTelugu ? SEO_PAGE_DATA.vrpsBirth.te : SEO_PAGE_DATA.vrpsBirth.en;
 
-  // Map founder keys to specific icons
-  const founderIcons = [
-    <FaBuilding className="text-amber-700 w-6 h-6" key="building" />,
-    <FaGavel className="text-amber-700 w-6 h-6" key="gavel" />,
-    <FaFlask className="text-amber-700 w-6 h-6" key="flask" />,
-    <FaNewspaper className="text-amber-700 w-6 h-6" key="newspaper" />,
-  ];
+  return constructMetadata({
+    title: data.title,
+    description: data.description,
+    path: "/about/vrps-birth",
+    locale,
+    keywords: data.keywords,
+    image: "/vrps-logo-3x.png",
+    type: "article",
+  });
+}
+
+export default async function VRPSBirthPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations({ locale, namespace: "vrpsBirth" });
+  const isTelugu = locale === "te";
 
   const founders = [
     {
       name: t("founders.1.name"),
       desc: t("founders.1.description"),
-      icon: founderIcons[1],
+      icon: <FaGavel className="text-amber-700 w-6 h-6" key="gavel" />,
     },
     {
       name: t("founders.2.name"),
       desc: t("founders.2.description"),
-      icon: founderIcons[2],
+      icon: <FaFlask className="text-amber-700 w-6 h-6" key="flask" />,
     },
     {
       name: t("founders.3.name"),
       desc: t("founders.3.description"),
-      icon: founderIcons[3],
+      icon: <FaNewspaper className="text-amber-700 w-6 h-6" key="newspaper" />,
     },
   ];
 
   return (
     <div className="bg-[#fcf8f2] text-gray-900 min-h-screen flex flex-col items-center">
+      {/* Schema.org Article & Breadcrumbs */}
+      <ArticleJsonLd
+        title={isTelugu ? SEO_PAGE_DATA.vrpsBirth.te.title : SEO_PAGE_DATA.vrpsBirth.en.title}
+        description={isTelugu ? SEO_PAGE_DATA.vrpsBirth.te.description : SEO_PAGE_DATA.vrpsBirth.en.description}
+        url={`/${locale}/about/vrps-birth`}
+        image="/vrps-logo-3x.png"
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: isTelugu ? "హోమ్" : "Home", url: `/${locale}` },
+          { name: isTelugu ? "VRPS ఆవిర్భావం" : "VRPS Birth", url: `/${locale}/about/vrps-birth` },
+        ]}
+      />
+
       {/* ======= Hero Section ======= */}
       <section className="relative w-full bg-gradient-to-r from-red-800 to-amber-950 text-white overflow-hidden py-16 md:py-24 px-4 sm:px-6 md:px-12 text-center shadow-lg">
-        {/* Subtle decorative background gradient */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-amber-600/20 via-transparent to-transparent opacity-60"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-amber-600/20 via-transparent to-transparent opacity-60 pointer-events-none" />
         <div className="relative max-w-4xl mx-auto z-10">
           <span className="inline-block px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full text-xs font-semibold uppercase tracking-wider text-amber-300 mb-4">
             Movement Origin
@@ -53,14 +87,14 @@ const VRPSBirthPage: React.FC = () => {
       </section>
 
       {/* ======= Main Content & Founders Grid ======= */}
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-3 gap-10 md:gap-12">
+      <main className="w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-3 gap-10 md:gap-12">
         {/* Story Section (Left 2 columns) */}
-        <div className="lg:col-span-2 space-y-8 leading-relaxed">
+        <article className="lg:col-span-2 space-y-8 leading-relaxed">
           {/* Paragraph 1 - Blockquote quote card */}
           <div className="relative border-l-4 border-amber-600 pl-6 py-3 bg-amber-50/60 rounded-r-2xl shadow-sm">
-            <p className="text-lg text-gray-800 italic font-medium leading-relaxed">
+            <blockquote className="text-lg text-gray-800 italic font-medium leading-relaxed">
               {t("p1")}
-            </p>
+            </blockquote>
           </div>
 
           {/* Paragraph 2 */}
@@ -70,12 +104,12 @@ const VRPSBirthPage: React.FC = () => {
 
           {/* Core Question & Answer Callout Card */}
           <div className="bg-gradient-to-br from-amber-500/10 to-red-500/10 border border-amber-500/20 rounded-2xl p-6 sm:p-8 shadow-sm">
-            <h3 className="text-xl sm:text-2xl font-bold text-red-800 mb-4 flex items-center gap-3">
+            <h2 className="text-xl sm:text-2xl font-bold text-red-800 mb-4 flex items-center gap-3">
               <span className="flex items-center justify-center w-8 h-8 rounded-full bg-red-800 text-white text-sm font-bold">
                 ?
               </span>
               {t("question")}
-            </h3>
+            </h2>
             <p className="text-lg sm:text-xl text-gray-800 font-semibold leading-relaxed border-l-2 border-red-700 pl-4 py-1">
               {t("answer")}
             </p>
@@ -97,10 +131,10 @@ const VRPSBirthPage: React.FC = () => {
           <p className="text-base sm:text-lg text-gray-700 leading-relaxed text-justify">
             {t("p5")}
           </p>
-        </div>
+        </article>
 
         {/* Guiding Personalities Sidebar (Right 1 column) */}
-        <div className="lg:col-span-1 space-y-6">
+        <aside className="lg:col-span-1 space-y-6">
           <div className="bg-white border border-amber-200 rounded-2xl p-6 shadow-sm sticky top-24">
             <h2 className="text-xl sm:text-2xl font-extrabold text-red-800 mb-6 border-b border-amber-100 pb-4">
               {t("guidingPersonalities")}
@@ -116,9 +150,9 @@ const VRPSBirthPage: React.FC = () => {
                     {founder.icon}
                   </div>
                   <div>
-                    <h4 className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-red-800 transition duration-300">
+                    <h3 className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-red-800 transition duration-300">
                       {founder.name}
-                    </h4>
+                    </h3>
                     <p className="text-sm text-gray-600 mt-0.5">
                       {founder.desc}
                     </p>
@@ -138,10 +172,8 @@ const VRPSBirthPage: React.FC = () => {
               </p>
             </div>
           </div>
-        </div>
-      </div>
+        </aside>
+      </main>
     </div>
   );
-};
-
-export default VRPSBirthPage;
+}
